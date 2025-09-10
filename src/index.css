@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@import "tailwindcss";
+
+
+/* Tailwind-compatible custom class */
+.custom-selector select {
+  @apply border-2 border-green-500;
+}
+
+
+/* Theme */
+@theme {
+  --color-primary: oklch(0.4755 0.1196 348.05);   /* #8b3c68 */
+  --color-secondary: oklch(0.694 0.150 7.45);  /* #c77496 */
+  --color-tertiary: oklch(0.7632 0.1013 353.54);  /* #e597b7 */
+
+  /* Fonts */
+  --font-primary: 'Poppins', sans-serif;
+}
+
+
+.input {
+  @apply border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500;
+}
+.input {
+  @apply border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-pink-500;
+}
+
+.checkbox {
+  @apply w-4 h-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500;
+}
