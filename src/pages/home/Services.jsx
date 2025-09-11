@@ -20,10 +20,6 @@ const Services = () => {
       {/* Header & Filter */}
       <div className="flex flex-col sm:flex-row items-center justify-between px-20 gap-4 mb-10">
         <h1 className="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-primary">Services</h1>
-        <CategorySelector
-          label="Categories"
-          options={["All","ACTORS & ACTRESS", "FASHION MODELS", "KIDS", "INFLUENCERS","VOICE OVER","DANCERS","Freelance Foreigners","Talent Agencies","Theater Artist"]}
-        />
       </div>
 
       {/* Categories Grid */}
