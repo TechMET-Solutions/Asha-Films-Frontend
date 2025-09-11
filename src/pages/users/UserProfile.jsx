@@ -902,15 +902,14 @@
 // }
 
 
-import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
-import Input from '../../components/ui/Input';
-import Select from '../../components/ui/Select';
-import RadioGroup from '../../components/ui/RadioGroup';
-import FileUpload from '../../components/ui/FileUpload';
-import FormButton from '../../components/ui/FormButton';
-import { API } from '../../api'
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API } from '../../api';
+import FormButton from '../../components/ui/FormButton';
+import Input from '../../components/ui/Input';
+import RadioGroup from '../../components/ui/RadioGroup';
+import Select from '../../components/ui/Select';
 import AvailabilitySelect from "./AvailabilitySelect";
 
 export default function ProfileForm() {
@@ -1074,7 +1073,7 @@ export default function ProfileForm() {
                     sports: u.sports || "",
                     skills: u.skills || "",
                     availabilities: u.availabilities || "",
-
+                  
                     // Physical attributes
                     body_type: u.body_type || "",
                     skin_tone: u.skin_tone || "",
@@ -1157,6 +1156,11 @@ export default function ProfileForm() {
                     // Other
                     portfolio_link: u.portfolio_link || "",
                 }));
+              setAvailabilities(
+  Array.isArray(u.SkillsData) ? u.SkillsData : JSON.parse(u.SkillsData || "[]")
+);
+
+                //   SkillsData : u.SkillsData || "",
             } catch (error) {
                 if (!axios.isCancel(error)) {
                     setError(error.response?.data?.message || error.message || "Failed to fetch profile");
@@ -1258,7 +1262,10 @@ export default function ProfileForm() {
 
     //     return fd;
     // };
-const buildFormData = () => {
+
+
+
+    const buildFormData = () => {
     const fd = new FormData();
 
     // Text fields using snake_case to match database
@@ -1319,44 +1326,90 @@ const buildFormData = () => {
 
     return fd;
 };
+    // const onSubmit = async () => {
+    //     debugger
+    //     try {
+    //         setSaving(true);
+    //         setError("");
+    //         setSuccess("");
+
+    //         const fd = buildFormData();
+
+    //         const response = await axios.put(`${API}/api/user/profile`, fd, {
+    //             headers: {
+    //                 Authorization: `Bearer ${token}`,
+    //                 "Content-Type": "multipart/form-data",
+    //             },
+    //         });
+
+    //         setSuccess("Profile updated successfully!");
+    //         navigate('/user/popular-casting-calls')
+    //         // Merge back returned user to refresh URLs
+    //         const u = response.data?.user || {};
+    //         setForm(prev => ({
+    //             ...prev,
+    //             image: null,
+    //             headshot_image: null,
+    //             full_image: null,
+    //             audition_video: null,
+    //             images: [],
+    //             image_url: u.image || prev.image_url,
+    //             image_urls: Array.isArray(u.images) ? u.images : prev.image_urls,
+    //             headshot_image_url: u.headshot_image || prev.headshot_image_url,
+    //             full_image_url: u.full_image || prev.full_image_url,
+    //             audition_video_url: u.audition_video || prev.audition_video_url,
+    //         }));
+    //     } catch (error) {
+    //         setError(error.response?.data?.message || error.message || "Failed to update profile");
+    //     } finally {
+    //         setSaving(false);
+    //     }
+    // };
     const onSubmit = async () => {
-        try {
-            setSaving(true);
-            setError("");
-            setSuccess("");
+    debugger
+  try {
+    setSaving(true);
+    setError("");
+    setSuccess("");
 
-            const fd = buildFormData();
+    const fd = buildFormData();
 
-            const response = await axios.put(`${API}/api/user/profile`, fd, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data",
-                },
-            });
+    // ✅ Add availabilities directly into fd
+    availabilities.forEach((item, index) => {
+      fd.append(`SkillsData[${index}]`, item);
+    });
 
-            setSuccess("Profile updated successfully!");
-            navigate('/user/popular-casting-calls')
-            // Merge back returned user to refresh URLs
-            const u = response.data?.user || {};
-            setForm(prev => ({
-                ...prev,
-                image: null,
-                headshot_image: null,
-                full_image: null,
-                audition_video: null,
-                images: [],
-                image_url: u.image || prev.image_url,
-                image_urls: Array.isArray(u.images) ? u.images : prev.image_urls,
-                headshot_image_url: u.headshot_image || prev.headshot_image_url,
-                full_image_url: u.full_image || prev.full_image_url,
-                audition_video_url: u.audition_video || prev.audition_video_url,
-            }));
-        } catch (error) {
-            setError(error.response?.data?.message || error.message || "Failed to update profile");
-        } finally {
-            setSaving(false);
-        }
-    };
+    const response = await axios.put(`${API}/api/user/profile`, fd, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    setSuccess("Profile updated successfully!");
+    navigate('/user/popular-casting-calls');
+
+    // Merge back returned user to refresh URLs
+    const u = response.data?.user || {};
+    setForm(prev => ({
+      ...prev,
+      image: null,
+      headshot_image: null,
+      full_image: null,
+      audition_video: null,
+      images: [],
+      image_url: u.image || prev.image_url,
+      image_urls: Array.isArray(u.images) ? u.images : prev.image_urls,
+      headshot_image_url: u.headshot_image || prev.headshot_image_url,
+      full_image_url: u.full_image || prev.full_image_url,
+      audition_video_url: u.audition_video || prev.audition_video_url,
+    }));
+  } catch (error) {
+    setError(error.response?.data?.message || error.message || "Failed to update profile");
+  } finally {
+    setSaving(false);
+  }
+};
 
     const Section = ({ children }) => (
         <section className="space-y-6">

@@ -116,21 +116,34 @@ const Profiles = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
 const location = useLocation();
-  // Store selected filters
-  const [filters, setFilters] = useState({
-    gender: [],
-    ageRange: [],
-    hair_color: [],
-    body_type: [],
-    beard: [],
-    eye_color: [],
-  });
-console.log(filters,"filters")
-  // ✅ Fetch profiles from backend
-  const fetchProfiles = async (appliedFilters = {}) => {
+
+// Store selected filters
+const [filters, setFilters] = useState({
+  gender: [],
+  ageRange: [],
+  hair_color: [],
+  body_type: [],
+  beard: [],
+  eye_color: [],
+});
+console.log(filters, "filters");
+
+// ✅ Fetch profiles from backend
+const fetchProfiles = async (appliedFilters = {}) => {
   try {
     setLoading(true);
-    const res = await axios.post(`http://localhost:8080/api/pages/filter`, appliedFilters);
+
+    // Merge filters + category
+    const payload = {
+      ...appliedFilters,
+      category: selectedCategory,   // 👈 add selected category here
+    };
+
+    const res = await axios.post(
+      `http://localhost:8080/api/pages/filter`,
+      payload
+    );
+
     if (res.data.success) {
       setProfiles(res.data.data);
       setFilteredProfiles(res.data.data);
