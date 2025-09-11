@@ -10,9 +10,9 @@ import {
   FaUser,
   FaVenusMars,
 } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
 import { icons } from "../../assets";
 import { CategorySelector } from "../../components/ui";
-import { useLocation } from "react-router-dom";
 
 
 const ProfileCard = ({ name, age, gender, location, image }) => {
@@ -58,7 +58,7 @@ const ProfileCard = ({ name, age, gender, location, image }) => {
   );
 };
 
-const FilterSection = ({ title, options, icon: Icon, onChange, selectedOptions = [] }) => (
+const FilterSection = ({ title, options, icon: Icon = FaUser, onChange }) => (
   <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
     <div className="flex items-center gap-2 mb-3">
       {Icon && <Icon className="text-primary text-lg" />}
@@ -71,7 +71,6 @@ const FilterSection = ({ title, options, icon: Icon, onChange, selectedOptions =
             type="checkbox"
             id={opt}
             className="mr-2 h-4 w-4 text-blue-600"
-            checked={selectedOptions.includes(opt)} 
             onChange={(e) => onChange(opt, e.target.checked)}
           />
           <label htmlFor={opt} className="text-gray-600 text-sm">
@@ -83,6 +82,31 @@ const FilterSection = ({ title, options, icon: Icon, onChange, selectedOptions =
   </div>
 );
 
+const FilterSection2 = ({ title, options, icon: Icon, selectedOptions = [], onChange }) => {
+  return (
+    <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+      <div className="flex items-center gap-2 mb-2">
+        {Icon && <Icon className="text-gray-600" />}
+        <h3 className="font-semibold">{title}</h3>
+      </div>
+      <div className="space-y-2">
+        {options.map((option) => {
+          const isChecked = selectedOptions.includes(option); // ✅ match with state
+          return (
+            <label key={option} className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={isChecked} // ✅ checkbox shows selected if matched
+                onChange={(e) => onChange(option, e.target.checked)}
+              />
+              <span>{option}</span>
+            </label>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
 
 const Profiles = () => {
   const [profiles, setProfiles] = useState([]);
@@ -118,7 +142,6 @@ console.log(filters,"filters")
   }
 };
 
-
 useEffect(() => {
   if (location.state) {
     const { category, gender } = location.state;
@@ -136,8 +159,6 @@ useEffect(() => {
     }
   }
 }, [location.state]);
-
-
 // When filters change, refetch
 useEffect(() => {
   fetchProfiles(filters);
@@ -227,11 +248,11 @@ const handleFilterChange = (field, value, checked) => {
       <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6">
         {/* Sidebar Filters */}
         <div className="hidden lg:block space-y-6 lg:sticky lg:top-4 lg:h-fit">
-        <FilterSection
+        <FilterSection2
   title="Gender"
   options={["Male", "Female", "Other"]}
   icon={FaUser}
-  selectedOptions={filters.gender}   // ✅ pass filters state
+  selectedOptions={filters.gender}   // ✅ pass state
   onChange={(v, c) => handleFilterChange("gender", v, c)}
 />
           <FilterSection
@@ -317,13 +338,12 @@ const handleFilterChange = (field, value, checked) => {
             </div>
             <div className="space-y-6">
               {/* Reuse FilterSection here */}
-             <FilterSection
-  title="Gender"
-  options={["Male", "Female", "Other"]}
-  icon={FaUser}
-  selectedOptions={filters.gender}   // ✅ keeps Male/Female checked
-  onChange={(v, c) => handleFilterChange("gender", v, c)}
-/>
+              <FilterSection
+                title="Gender"
+                options={["Male", "Female", "Other"]}
+                icon={FaUser}
+                onChange={(v, c) => handleFilterChange("gender", v, c)}
+              />
               <FilterSection
                 title="Age"
                 options={["0-2", "3-5", "6-9", "10-13", "14-17", "18-24"]}
