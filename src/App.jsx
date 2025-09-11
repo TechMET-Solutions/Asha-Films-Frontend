@@ -41,7 +41,7 @@ export default function App() {
 
         <Route path="/project-details/:id" element={<HomeLayout><ProjectDetails /></HomeLayout>} />
 
-{/* ======================= USER ROUTE START ====================================================================== */}
+        {/* ======================= USER ROUTE START ====================================================================== */}
         <Route
           path="/user/popular-casting-calls"
           element={
@@ -97,7 +97,7 @@ export default function App() {
           path="/user/complate-profile"
           element={
             <ProtectedRoute role={["user"]}>
-                <UserProfile />
+              <UserProfile />
             </ProtectedRoute>
           }
         />
@@ -128,7 +128,7 @@ export default function App() {
           path="/production/complete-profile"
           element={
             <ProtectedRoute role={["production"]}>
-                <ProductionCompleteProfile />
+              <ProductionCompleteProfile />
             </ProtectedRoute>
 
           }
@@ -163,19 +163,19 @@ export default function App() {
           </ProtectedRoute>
         } />
 
-       <Route
-  path="/production/applicant-profile/:userId"
-  element={
-    <ProtectedRoute role={["production"]}>
-      <ProductionLayout>
-        <ApplicantProfile />
-      </ProductionLayout>
-    </ProtectedRoute>
-  }
-/>
+        <Route
+          path="/production/applicant-profile/:id"
+          element={
+            <ProtectedRoute role={["production"]}>
+              <ProductionLayout>
+                <ApplicantProfile />
+              </ProductionLayout>
+            </ProtectedRoute>
+          }
+        />
 
         <Route
-          path="/production/applicant-profile-photos"
+          path="/production/applicant-profile-photos/:id"
           element={
             // <ProtectedRoute role={["production"]}>
             <ProductionLayout>
@@ -188,13 +188,13 @@ export default function App() {
 
 
         <Route
-  path="/production/application-details/:id"
-  element={
-    <ProductionLayout>
-      <ApplicationApplyDetails />
-    </ProductionLayout>
-  }
-/>
+          path="/production/application-details/:id"
+          element={
+            <ProductionLayout>
+              <ApplicationApplyDetails />
+            </ProductionLayout>
+          }
+        />
 
 
       </Routes>

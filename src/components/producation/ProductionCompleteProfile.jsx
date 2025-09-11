@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { API } from "../../api";
-// Keep using your Input component; native checkboxes are used for bulletproof rendering
 import Input from "../ui/Input";
 import { FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +23,7 @@ const booleanKeys = [
   "works_events",
 ];
 
-// Convert whatever comes from API ("1","0","true","false", 1,0, true,false, null) → boolean
+// Normalize backend values into real booleans
 const normalizeBool = (v) => {
   if (typeof v === "boolean") return v;
   if (v === 1 || v === "1") return true;
@@ -34,11 +33,10 @@ const normalizeBool = (v) => {
     if (s === "true") return true;
     if (s === "false") return false;
   }
-  // Default safe fallback
   return false;
 };
 
-// Convert boolean → "1"/"0" for multipart/form-data so backend reads them reliably
+// Convert boolean → "1"/"0" for FormData
 const toFormBool = (b) => (b ? "1" : "0");
 
 const CheckboxField = ({ name, label, checked, onChange }) => (
@@ -60,7 +58,6 @@ const ProductionCompleteProfile = () => {
   const [error, setError] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const [images, setImages] = useState([]);
   const [progress, setProgress] = useState(0);
 
   const navigate = useNavigate();
@@ -91,19 +88,17 @@ const ProductionCompleteProfile = () => {
     works_events: false,
   });
 
-  // Text inputs
+  // Handle inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Checkbox inputs
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
     setFormData((prev) => ({ ...prev, [name]: checked }));
   };
 
-  // Image upload
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -114,7 +109,7 @@ const ProductionCompleteProfile = () => {
     }
   };
 
-  // Fetch profile
+  // Fetch profile from backend
   useEffect(() => {
     (async () => {
       try {
@@ -124,7 +119,6 @@ const ProductionCompleteProfile = () => {
         });
 
         const data = res.data?.production_house || {};
-        // Map everything; normalize booleans robustly
         const next = {
           company_name: data.company_name || "",
           owner_name: data.owner_name || "",
@@ -151,11 +145,7 @@ const ProductionCompleteProfile = () => {
         };
 
         setFormData(next);
-
-        // If backend returns a relative path, you may need to prefix with API host.
-        if (data.image) {
-          setImagePreview(data.image);
-        }
+        if (data.image) setImagePreview(data.image);
       } catch (err) {
         setError(err.response?.data?.message || "Failed to fetch profile");
       } finally {
@@ -164,7 +154,55 @@ const ProductionCompleteProfile = () => {
     })();
   }, []);
 
-  // Save
+  // Calculate profile completion %
+  useEffect(() => {
+    let filled = 0;
+
+    const textFields = [
+      "company_name",
+      "owner_name",
+      "email",
+      "phone_number",
+      "location",
+      "type_of_work",
+      "website_url",
+      "alternate_contact",
+    ];
+    textFields.forEach((k) => {
+      if (formData[k]) filled++;
+    });
+
+    if (
+      [
+        "is_casting_director",
+        "is_production_house",
+        "is_ad_agency",
+        "is_event_agency",
+        "is_theater_group",
+        "is_studio",
+        "is_talent_agency",
+      ].some((k) => !!formData[k])
+    ) filled++;
+
+    if (
+      [
+        "works_tv",
+        "works_film",
+        "works_ott",
+        "works_ads",
+        "works_print",
+        "works_theatre",
+        "works_events",
+      ].some((k) => !!formData[k])
+    ) filled++;
+
+    if (imagePreview) filled++;
+
+    const total = 11; // 8 text + 1 company type + 1 industry + 1 image
+    setProgress(Math.round((filled / total) * 100));
+  }, [formData, imagePreview]);
+
+  // Submit profile
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -173,7 +211,6 @@ const ProductionCompleteProfile = () => {
       const token = localStorage.getItem("token");
 
       const submitData = new FormData();
-      // append strings
       submitData.append("company_name", formData.company_name);
       submitData.append("owner_name", formData.owner_name);
       submitData.append("email", formData.email);
@@ -183,8 +220,9 @@ const ProductionCompleteProfile = () => {
       submitData.append("website_url", formData.website_url);
       submitData.append("type_of_work", formData.type_of_work);
 
-      // append boolean flags as "1"/"0" so backend (without changes) reads them reliably
-      booleanKeys.forEach((k) => submitData.append(k, toFormBool(!!formData[k])));
+      booleanKeys.forEach((k) =>
+        submitData.append(k, toFormBool(!!formData[k]))
+      );
 
       if (imageFile) submitData.append("image", imageFile);
 
@@ -195,7 +233,6 @@ const ProductionCompleteProfile = () => {
         },
       });
 
-      // Re-normalize response
       const ph = res.data?.production_house || {};
       setFormData((prev) => {
         const updated = { ...prev };
@@ -215,8 +252,7 @@ const ProductionCompleteProfile = () => {
       if (ph.image) setImagePreview(ph.image);
 
       toast.success("Profile updated successfully!");
-      navigate("/production/add-job")
-      
+      navigate("/production/add-job");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update profile");
     } finally {
@@ -224,101 +260,73 @@ const ProductionCompleteProfile = () => {
     }
   };
 
-  // wflevdbkj
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (!file.type.startsWith('image/')) {
-        toast.error("Please select an image file");
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData((prev) => ({
-          ...prev,
-          profile_photo: file,
-          profilePhotoPreview: reader.result,
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   if (isLoading) return <div>Loading profile...</div>;
 
   return (
     <div className="w-full h-screen bg-white overflow-y-auto px-16 py-10">
+      {/* Profile Section */}
+      <div className="flex items-center gap-4 p-6 shadow-md relative">
+        {/* Progress Ring */}
+        <div className="relative w-28 h-28">
+          <svg className="absolute top-0 left-0 w-full h-full transform -rotate-90">
+            <circle
+              cx="56"
+              cy="56"
+              r="52"
+              stroke="#e5e7eb"
+              strokeWidth="4"
+              fill="transparent"
+            />
+            <circle
+              cx="56"
+              cy="56"
+              r="52"
+              stroke="#8B3C68"
+              strokeWidth="4"
+              fill="transparent"
+              strokeDasharray={2 * Math.PI * 52}
+              strokeDashoffset={2 * Math.PI * 52 * (1 - progress / 100)}
+              strokeLinecap="round"
+            />
+          </svg>
 
-              {/* Profile Section */}
-        <div className="flex items-center gap-4 p-6 shadow-md relative">
-
-          {/* Profile Image */}
-          <div className="relative w-28 h-28">
-            {/* Progress Ring */}
-            <svg className="absolute top-0 left-0 w-full h-full transform -rotate-90">
-              <circle
-                cx="56"
-                cy="56"
-                r="52"
-                stroke="#e5e7eb"
-                strokeWidth="4"
-                fill="transparent"
-              />
-              <circle
-                cx="56"
-                cy="56"
-                r="52"
-                stroke="#8B3C68"
-                strokeWidth="4"
-                fill="transparent"
-                strokeDasharray={2 * Math.PI * 52}
-                strokeDashoffset={2 * Math.PI * 52 * (1 - progress / 100)}
-                strokeLinecap="round"
-              />
-            </svg>
-
-            {/* Profile Image Upload */}
-            <label htmlFor="profile-upload" className="cursor-pointer block w-full h-full">
-              <div className="w-28 h-28 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-                {imagePreview ? (
-                  <img
-                    src={imagePreview}
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <FaUser className="w-12 h-12 text-gray-400" />
-                )}
-              </div>
-              <input
-                type="file"
-                id="profile-upload"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-              />
-            </label>
-
-            {/* Progress Text */}
-            {/* <span className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-[#8B3C68]">
-              {progress}%
-            </span> */}
-          </div>
-
-
-          {/* Company Info */}
-          <div className="text-start ml-4">
-            <h2 className="text-xl font-bold text-gray-800">
-              {formData.company_name || "Company / Agency Name"}
-            </h2>
-            <p className="text-sm text-gray-600">
-              Profile Type : {formData.type_of_work || "Casting Director"}
-            </p>
-          </div>
+          <label
+            htmlFor="profile-upload"
+            className="cursor-pointer block w-full h-full"
+          >
+            <div className="w-28 h-28 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+              {imagePreview ? (
+                <img
+                  src={imagePreview}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <FaUser className="w-12 h-12 text-gray-400" />
+              )}
+            </div>
+            <input
+              type="file"
+              id="profile-upload"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
+            />
+          </label>
         </div>
 
+        {/* Company Info */}
+        <div className="text-start ml-4">
+          <h2 className="text-xl font-bold text-gray-800">
+            {formData.company_name || "Company / Agency Name"}
+          </h2>
+          <p className="text-sm text-gray-600">
+            Profile Type : {formData.type_of_work || "Casting Director"}
+          </p>
+        </div>
+      </div>
 
+      {/* Form */}
       <form onSubmit={onSubmit} className="space-y-8 mt-8">
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
@@ -326,23 +334,68 @@ const ProductionCompleteProfile = () => {
           </div>
         )}
 
-        {/* Basic Company Information */}
+        {/* Basic Info */}
         <div>
-          <h2 className="text-lg font-semibold text-[#8B3C68] mb-4">Basic Company Information</h2>
+          <h2 className="text-lg font-semibold text-[#8B3C68] mb-4">
+            Basic Company Information
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Input name="company_name" value={formData.company_name} onChange={handleChange} placeholder="Company/Agency Name**" required />
-            <Input name="owner_name" value={formData.owner_name} onChange={handleChange} placeholder="Owner / Representative Name**" required />
-            <Input name="email" type="email" value={formData.email} onChange={handleChange} placeholder="Email Address*" required />
-            <Input name="phone_number" value={formData.phone_number} onChange={handleChange} placeholder="Phone Number (WhatsApp preferred)*" required />
-            <Input name="alternate_contact" value={formData.alternate_contact} onChange={handleChange} placeholder="Alternate Contact*" />
-            <Input name="location" value={formData.location} onChange={handleChange} placeholder="Location*" required />
-            <Input name="website_url" value={formData.website_url} onChange={handleChange} placeholder="Website / Portfolio URL" />
+            <Input
+              name="company_name"
+              value={formData.company_name}
+              onChange={handleChange}
+              placeholder="Company/Agency Name**"
+              required
+            />
+            <Input
+              name="owner_name"
+              value={formData.owner_name}
+              onChange={handleChange}
+              placeholder="Owner / Representative Name**"
+              required
+            />
+            <Input
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Email Address*"
+              required
+            />
+            <Input
+              name="phone_number"
+              value={formData.phone_number}
+              onChange={handleChange}
+              placeholder="Phone Number (WhatsApp preferred)*"
+              required
+            />
+            <Input
+              name="alternate_contact"
+              value={formData.alternate_contact}
+              onChange={handleChange}
+              placeholder="Alternate Contact*"
+            />
+            <Input
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              placeholder="Location*"
+              required
+            />
+            <Input
+              name="website_url"
+              value={formData.website_url}
+              onChange={handleChange}
+              placeholder="Website / Portfolio URL"
+            />
           </div>
         </div>
 
         {/* Company Type */}
         <div>
-          <h2 className="text-lg font-semibold text-[#8B3C68] mb-4">Company Type</h2>
+          <h2 className="text-lg font-semibold text-[#8B3C68] mb-4">
+            Company Type
+          </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {[
               { label: "Casting Director", field: "is_casting_director" },
@@ -366,7 +419,9 @@ const ProductionCompleteProfile = () => {
 
         {/* Industries Served */}
         <div>
-          <h2 className="text-lg font-semibold text-[#8B3C68] mb-4">Industries Served</h2>
+          <h2 className="text-lg font-semibold text-[#8B3C68] mb-4">
+            Industries Served
+          </h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3">
             {[
               { label: "TV", field: "works_tv" },
