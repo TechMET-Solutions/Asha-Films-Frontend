@@ -128,7 +128,7 @@ export default function ProfileForm() {
         // Links/Other
         portfolio_link: "",
 
-        CategoryData: availabilities
+        CategoryData: []
     });
 
     // Refs to reset file inputs when needed
@@ -252,12 +252,16 @@ export default function ProfileForm() {
 
                     // Other
                     portfolio_link: u.portfolio_link || "",
+                    
+                    // Category data
+                    CategoryData: Array.isArray(u.CategoryData) ? u.CategoryData : []
                 }));
-                setAvailabilities(
-                    Array.isArray(u.SkillsData) ? u.SkillsData : JSON.parse(u.SkillsData || "[]")
-                );
+                
+                // Set availabilities from SkillsData or CategoryData
+                const skillsData = Array.isArray(u.SkillsData) ? u.SkillsData : 
+                                 JSON.parse(u.SkillsData || "[]");
+                setAvailabilities(skillsData);
 
-                //   SkillsData : u.SkillsData || "",
             } catch (error) {
                 if (!axios.isCancel(error)) {
                     setError(error.response?.data?.message || error.message || "Failed to fetch profile");
@@ -303,65 +307,6 @@ export default function ProfileForm() {
         }));
     };
 
-    // const buildFormData = () => {
-    //     const fd = new FormData();
-
-    //     // Text fields using snake_case to match database
-    //     const textFields = [
-    //         "first_name", "middle_name", "last_name", "date_of_birth", "gender",
-    //         "profileType", "current_location", "country", "state", "city",
-    //         "nationality", "cinta_card", "language", "hobbies", "sports",
-    //         "skills", "availabilities", "body_type", "skin_tone", "hair_length",
-    //         "hair_color", "disabilities", "distinctive_features", "beard",
-    //         "moustache", "tattoo_piercing", "height", "weight", "shoe_size",
-    //         "waist", "hips", "arm_hole", "shoulder", "sleeve_length",
-    //         "trouser_length", "inseam_length", "eye_color", "measurement",
-    //         "biceps", "collar", "fork", "above_bust", "bust", "under_bust",
-    //         "cup_size", "upper_thigh", "lower_thigh", "till_elbow", "special_niche",
-    //         "body_double_actor_name", "lookalike_actor_name", "imdb_profile",
-    //         "acting_experience", "professional_training", "instagram_link",
-    //         "influencer_type", "influencer_niche", "agency_name", "manager_name",
-    //         "portfolio_link"
-    //     ];
-
-    //     textFields.forEach(key => {
-    //         const v = form[key];
-    //         if (v !== undefined && v !== null && `${v}`.length) {
-    //             fd.append(key, v);
-    //         }
-    //     });
-
-    //     // Boolean fields
-    //     const booleanFields = [
-    //         "passport", "driver_license", "plus_size_model", "petite_model",
-    //         "two_wheeler", "four_wheeler", "lead_roles", "supporting_roles",
-    //         "background_extras", "child_roles", "elderly_roles", "romantic_roles",
-    //         "villain_roles", "comedy_roles", "period_roles", "fantasy_sci_fi_roles",
-    //         "special_category", "lgbtq_friendly", "theatre", "print_modeling",
-    //         "reality_shows", "hand_modeling", "foot_modeling", "body_double"
-    //     ];
-
-    //     booleanFields.forEach(key => {
-    //         fd.append(key, form[key] ? "1" : "0");
-    //     });
-
-    //     // Append files only if newly selected
-    //     if (form.image instanceof File) fd.append("image", form.image);
-    //     if (form.headshot_image instanceof File) fd.append("headshot_image", form.headshot_image);
-    //     if (form.full_image instanceof File) fd.append("full_image", form.full_image);
-    //     if (form.audition_video instanceof File) fd.append("audition_video", form.audition_video);
-
-    //     if (Array.isArray(form.images) && form.images.length) {
-    //         form.images.forEach(file => {
-    //             if (file instanceof File) fd.append("images", file);
-    //         });
-    //     }
-
-    //     return fd;
-    // };
-
-
-
     const buildFormData = () => {
         const fd = new FormData();
 
@@ -405,8 +350,8 @@ export default function ProfileForm() {
         });
 
         // ✅ Add CategoryData
-        if (Array.isArray(form.CategoryData) && form.CategoryData.length) {
-            fd.append("CategoryData", JSON.stringify(form.CategoryData));
+        if (Array.isArray(availabilities) && availabilities.length) {
+            fd.append("SkillsData", JSON.stringify(availabilities));
         }
 
         // Append files only if newly selected
@@ -423,58 +368,14 @@ export default function ProfileForm() {
 
         return fd;
     };
-    // const onSubmit = async () => {
-    //     debugger
-    //     try {
-    //         setSaving(true);
-    //         setError("");
-    //         setSuccess("");
 
-    //         const fd = buildFormData();
-
-    //         const response = await axios.put(`${API}/api/user/profile`, fd, {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`,
-    //                 "Content-Type": "multipart/form-data",
-    //             },
-    //         });
-
-    //         setSuccess("Profile updated successfully!");
-    //         navigate('/user/popular-casting-calls')
-    //         // Merge back returned user to refresh URLs
-    //         const u = response.data?.user || {};
-    //         setForm(prev => ({
-    //             ...prev,
-    //             image: null,
-    //             headshot_image: null,
-    //             full_image: null,
-    //             audition_video: null,
-    //             images: [],
-    //             image_url: u.image || prev.image_url,
-    //             image_urls: Array.isArray(u.images) ? u.images : prev.image_urls,
-    //             headshot_image_url: u.headshot_image || prev.headshot_image_url,
-    //             full_image_url: u.full_image || prev.full_image_url,
-    //             audition_video_url: u.audition_video || prev.audition_video_url,
-    //         }));
-    //     } catch (error) {
-    //         setError(error.response?.data?.message || error.message || "Failed to update profile");
-    //     } finally {
-    //         setSaving(false);
-    //     }
-    // };
     const onSubmit = async () => {
-        debugger
         try {
             setSaving(true);
             setError("");
             setSuccess("");
 
             const fd = buildFormData();
-
-            // ✅ Add availabilities directly into fd
-            availabilities.forEach((item, index) => {
-                fd.append(`SkillsData[${index}]`, item);
-            });
 
             const response = await axios.put(`${API}/api/user/profile`, fd, {
                 headers: {
@@ -508,6 +409,12 @@ export default function ProfileForm() {
         }
     };
 
+    // Handle checkbox changes for character roles, gender representation, and experience
+    const handleCheckboxChange = (e, category) => {
+        const { name, checked } = e.target;
+        setForm(f => ({ ...f, [name]: checked }));
+    };
+
     const Section = ({ children }) => (
         <section className="space-y-6">
             <div className="grid grid-cols-1 gap-3">{children}</div>
@@ -534,26 +441,31 @@ export default function ProfileForm() {
         beard: ["CLEAN SHAVE", "NORMAL", "LONG", "BLACK", "WHITE", "SALT & PEPPER", "STUBBLE", "COLOURED BEARD", "ANY OTHER"],
         moustache: ["Yes", "No"],
         shoe_size: ["6", "7", "8", "9", "10"],
-        character_roles: [
-            "Lead Roles",
-            "Supporting Roles",
-            "Background/Extras",
-            "Child Roles",
-            "Elderly Roles",
-            "Romantic Roles",
-            "Villain/Negative Roles",
-            "Comedy Roles",
-            "Period/Historical Roles",
-            "Fantasy/Sci-fi Roles",
-            "Special category",
-        ],
-        gender_representation: ["LGBTQ+ Friendly"],
-        experience: ["in Theatre", "in Print/Modeling", "in Reality Shows"],
     };
 
-    const characterRoleOptions = selectOptions.character_roles;
-    const genderRepresentationOptions = selectOptions.gender_representation;
-    const experienceOptions = selectOptions.experience;
+    const characterRoleOptions = [
+        { name: "lead_roles", label: "Lead Roles" },
+        { name: "supporting_roles", label: "Supporting Roles" },
+        { name: "background_extras", label: "Background/Extras" },
+        { name: "child_roles", label: "Child Roles" },
+        { name: "elderly_roles", label: "Elderly Roles" },
+        { name: "romantic_roles", label: "Romantic Roles" },
+        { name: "villain_roles", label: "Villain/Negative Roles" },
+        { name: "comedy_roles", label: "Comedy Roles" },
+        { name: "period_roles", label: "Period/Historical Roles" },
+        { name: "fantasy_sci_fi_roles", label: "Fantasy/Sci-fi Roles" },
+        { name: "special_category", label: "Special category" },
+    ];
+
+    const genderRepresentationOptions = [
+        { name: "lgbtq_friendly", label: "LGBTQ+ Friendly" }
+    ];
+
+    const experienceOptions = [
+        { name: "theatre", label: "in Theatre" },
+        { name: "print_modeling", label: "in Print/Modeling" },
+        { name: "reality_shows", label: "in Reality Shows" }
+    ];
 
     const Checkbox = ({ name, label, checked, onChange }) => (
         <label className="flex items-center gap-2">
@@ -567,12 +479,6 @@ export default function ProfileForm() {
             <span className="text-sm text-gray-700">{label}</span>
         </label>
     );
-
-    const handleCheckboxChange = (e, category) => {
-        const { value, checked } = e.target;
-        // Handle checkbox logic here
-        console.log(category, value, checked);
-    };
 
     const steps = [
         // Step 1: Basic
@@ -623,9 +529,6 @@ export default function ProfileForm() {
                 </div>
 
                 <div>
-                    {/* <div className="text-lg font-semibold text-primary mb-6">• Availabilities</div>
-                        <Select name="availabilities" value={form.availabilities} onChange={onChange} options={selectOptions.availabilities} placeholder="Availabilities" /> */}
-
                     <AvailabilitySelect availabilities={availabilities} setAvailabilities={setAvailabilities} />
                 </div>
             </Section>
@@ -741,152 +644,141 @@ export default function ProfileForm() {
 
         // Step 3: Media
         (
-            <Section key="s3" title="Media Uploads" subtitle="Upload photos and videos">
-                <div className="w-full min-h-screen bg-white p-4">
-                    <form className="space-y-8 max-w-6xl mx-auto">
+            <Section key="s3">
+                {/* Character/Role Suitability */}
+                <div>
+                    <div className="text-lg font-semibold text-primary mb-6">• Character/Role Suitability</div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        {characterRoleOptions.map((option, index) => (
+                            <Checkbox
+                                key={index}
+                                name={option.name}
+                                label={option.label}
+                                checked={form[option.name]}
+                                onChange={handleCheckboxChange}
+                            />
+                        ))}
+                    </div>
+                </div>
 
-                        {/* Character/Role Suitability */}
-                        <div>
-                            <div className="text-lg font-semibold text-primary mb-6">• Character/Role Suitability</div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                                {characterRoleOptions.map((option, index) => (
-                                    <Checkbox
-                                        key={index}
-                                        label={option}
-                                        name="characterRoles"
-                                        value={option}
-                                        onChange={(e) => handleCheckboxChange(e, 'characterRoles')}
-                                    />
-                                ))}
-                            </div>
-                        </div>
+                {/* Transgender/Non-Binary Representation */}
+                <div>
+                    <div className="text-lg font-semibold text-primary mb-6">• Transgender/Non-Binary Representation</div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        {genderRepresentationOptions.map((option, index) => (
+                            <Checkbox
+                                key={index}
+                                name={option.name}
+                                label={option.label}
+                                checked={form[option.name]}
+                                onChange={handleCheckboxChange}
+                            />
+                        ))}
+                    </div>
+                </div>
 
+                {/* Experience */}
+                <div>
+                    <div className="text-lg font-semibold text-primary mb-6">• Experience</div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        {experienceOptions.map((option, index) => (
+                            <Checkbox
+                                key={index}
+                                name={option.name}
+                                label={option.label}
+                                checked={form[option.name]}
+                                onChange={handleCheckboxChange}
+                            />
+                        ))}
+                    </div>
+                </div>
 
-                        {/* Transgender/Non-Binary Representation */}
-                        <div>
-                            <div className="text-lg font-semibold text-primary mb-6">• Transgender/Non-Binary Representation</div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                                {genderRepresentationOptions.map((option, index) => (
-                                    <Checkbox
-                                        key={index}
-                                        label={option}
-                                        name="genderRepresentation"
-                                        value={option}
-                                        onChange={(e) => handleCheckboxChange(e, 'genderRepresentation')}
-                                    />
-                                ))}
-                            </div>
-                        </div>
+                {/* Professional Details/Work Links */}
+                <div>
+                    <div className="text-lg font-semibold text-primary mb-6">• Professional Details/Work Links</div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <Input placeholder="IMDB profile*" name="imdb_profile" value={form.imdb_profile} onChange={onChange} />
+                        <Input placeholder="Acting experience*" name="acting_experience" value={form.acting_experience} onChange={onChange} />
+                        <Input placeholder="Professional training*" name="professional_training" value={form.professional_training} onChange={onChange} />
 
+                        <Input placeholder="Instagram link*" name="instagram_link" value={form.instagram_link} onChange={onChange} />
+                        <Input placeholder="Influencer(micro, macro, nano, ugc)*" name="influencer_type" value={form.influencer_type} onChange={onChange} />
+                        <Input placeholder="Specify niche*" name="influencer_niche" value={form.influencer_niche} onChange={onChange} />
 
-                        {/* Experience */}
-                        <div>
-                            <div className="text-lg font-semibold text-primary mb-6">• Experience</div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                                {experienceOptions.map((option, index) => (
-                                    <Checkbox
-                                        key={index}
-                                        label={option}
-                                        name="experience"
-                                        value={option}
-                                        onChange={(e) => handleCheckboxChange(e, 'experience')}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Professional Details/Work Links */}
-                        <div>
-                            <div className="text-lg font-semibold text-primary mb-6">• Professional Details/Work Links</div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                <Input placeholder="IMDB profile*" name="imdbProfile" value={form.imdbProfile} onChange={onChange} />
-                                <Input placeholder="Acting experience*" name="actingExperience" value={form.actingExperience} onChange={onChange} />
-                                <Input placeholder="Professional training*" name="professionalTraining" value={form.professionalTraining} onChange={onChange} />
-
-                                <Input placeholder="Instagram link*" name="instagramLink" value={form.instagramLink} onChange={onChange} />
-                                <Input placeholder="Influencer(micro, macro, nano, ugc)*" name="influencerType" value={form.influencerType} onChange={onChange} />
-                                <Input placeholder="Specify niche*" name="specifyNiche" value={form.specifyNiche} onChange={onChange} />
-
-                                <FileUpload
-                                    label="Headshot (Close-up)*"
-                                    name="headshot_image" Changed to match backend
-                                    type="image"
-                                    onChange={(e) => setFormData({ ...formData, headshot: e.target.files[0] })}
-                                />
-
-
-                                <FileUpload
-                                    label="Full Photo*"
-                                    name="full_image" Changed to match backend
-                                    type="image"
-                                    onChange={(e) => setFormData({ ...formData, fullPhoto: e.target.files[0] })}
-                                />
-
-                                <FileUpload
-                                    label="Audition Video / Intro*"
-                                    name="audition_video" Changed to match backend
-                                    type="video"
-                                    onChange={(e) => setFormData({ ...formData, introVideo: e.target.files[0] })}
-                                />
-
-
-                                <Input placeholder="Portfolio / Show reel Link*" name="profileLink" value={form.profileLink} onChange={onChange} />
-                                <Input placeholder="Instagram / Social Media Link*" name="socialmediaLink" value={form.socialmediaLink} onChange={onChange} />
-                            </div>
-                        </div>
-
-                        {/* Agency Details */}
-                        <div>
-                            <div className="text-lg font-semibold text-primary mb-6">• If With Any Agency [Mention Name/ Manager’s Name]</div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <Input placeholder="Agency Name" name="agencyName" value={form.agencyName} onChange={onChange} />
-                                <Input placeholder="Manager Name" name="managerName" value={form.managerName} onChange={onChange} />
-                            </div>
-                        </div>
-
-                        {/* Hand Modeling Suitability */}
-                        <RadioGroup
-                            label="Hand Modeling Suitability"
-                            name="handModeling"
-                            options={['Yes', 'No']}
-                            value={form.handModeling}
-                            onChange={onChange}
+                        <FileUpload
+                            label="Headshot (Close-up)*"
+                            name="headshot_image"
+                            type="image"
+                            onChange={onFileChange}
                         />
 
-                        {/* Foot Modeling Suitability */}
-                        <RadioGroup
-                            label="Foot Modeling Suitability"
-                            name="footModeling"
-                            options={['Yes', 'No']}
-                            value={form.footModeling}
-                            onChange={onChange}
+                        <FileUpload
+                            label="Full Photo*"
+                            name="full_image"
+                            type="image"
+                            onChange={onFileChange}
                         />
 
-                        {/* Body Double Checkbox */}
-                        <div>
-                            <label className="inline-flex items-center space-x-2 mt-6">
-                                <input
-                                    type="checkbox"
-                                    name="bodyDouble"
-                                    checked={form.bodyDouble}
-                                    onChange={onChange}
-                                    className="form-checkbox h-5 w-5 text-purple-600"
-                                />
-                                <span className='text-lg font-semibold text-primary'>Comfortable With Body Double</span>
-                            </label>
-                        </div>
+                        <FileUpload
+                            label="Audition Video / Intro*"
+                            name="audition_video"
+                            type="video"
+                            onChange={onFileChange}
+                        />
 
-                        {/* Actor Double Name */}
-                        <div className="text-lg font-semibold text-primary mb-6">• Specify Actor Name If You Are Already A Body Double</div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                            <Input placeholder="Actor Name" name="actorDoubleName" value={form.actorDoubleName} onChange={onChange} />
-                        </div>
-                        <div className="text-lg font-semibold text-primary mb-6">• Specify Actor If You Are A Lookalike</div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                            <Input placeholder="Specify Actor" name="lookalikeActor" value={form.lookalikeActor} onChange={onChange} />
-                        </div>
+                        <Input placeholder="Portfolio / Show reel Link*" name="portfolio_link" value={form.portfolio_link} onChange={onChange} />
+                    </div>
+                </div>
 
-                    </form>
+                {/* Agency Details */}
+                <div>
+                    <div className="text-lg font-semibold text-primary mb-6">• If With Any Agency [Mention Name/ Manager's Name]</div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Input placeholder="Agency Name" name="agency_name" value={form.agency_name} onChange={onChange} />
+                        <Input placeholder="Manager Name" name="manager_name" value={form.manager_name} onChange={onChange} />
+                    </div>
+                </div>
+
+                {/* Hand Modeling Suitability */}
+                <RadioGroup
+                    label="Hand Modeling Suitability"
+                    name="hand_modeling"
+                    options={['Yes', 'No']}
+                    value={form.hand_modeling ? 'Yes' : 'No'}
+                    onChange={(e) => setForm(f => ({ ...f, hand_modeling: e.target.value === 'Yes' }))}
+                />
+
+                {/* Foot Modeling Suitability */}
+                <RadioGroup
+                    label="Foot Modeling Suitability"
+                    name="foot_modeling"
+                    options={['Yes', 'No']}
+                    value={form.foot_modeling ? 'Yes' : 'No'}
+                    onChange={(e) => setForm(f => ({ ...f, foot_modeling: e.target.value === 'Yes' }))}
+                />
+
+                {/* Body Double Checkbox */}
+                <div>
+                    <label className="inline-flex items-center space-x-2 mt-6">
+                        <input
+                            type="checkbox"
+                            name="body_double"
+                            checked={form.body_double}
+                            onChange={onChange}
+                            className="form-checkbox h-5 w-5 text-purple-600"
+                        />
+                        <span className='text-lg font-semibold text-primary'>Comfortable With Body Double</span>
+                    </label>
+                </div>
+
+                {/* Actor Double Name */}
+                <div className="text-lg font-semibold text-primary mb-6">• Specify Actor Name If You Are Already A Body Double</div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <Input placeholder="Actor Name" name="body_double_actor_name" value={form.body_double_actor_name} onChange={onChange} />
+                </div>
+                <div className="text-lg font-semibold text-primary mb-6">• Specify Actor If You Are A Lookalike</div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <Input placeholder="Specify Actor" name="lookalike_actor_name" value={form.lookalike_actor_name} onChange={onChange} />
                 </div>
             </Section>
         ),
