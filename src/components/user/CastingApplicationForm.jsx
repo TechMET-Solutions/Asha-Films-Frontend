@@ -8,6 +8,7 @@ import FormButton from "../ui/FormButton";
 import axios from "axios";
 import { API } from "../../api";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const CastingApplicationForm = () => {
     const { jobId, jobType } = useParams();
@@ -44,9 +45,6 @@ const CastingApplicationForm = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    console.log(jobId)
-    console.log(jobType)
-
     // ✅ Fetch profile and prefill
     useEffect(() => {
         const fetchProfile = async () => {
@@ -55,6 +53,8 @@ const CastingApplicationForm = () => {
                 const res = await axios.get(`${API}/api/user/profile`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
+
+                console.log(res.data)
 
                 if (res.data.success) {
                     const user = res.data.user;
@@ -100,21 +100,68 @@ const CastingApplicationForm = () => {
         });
     };
 
+    // ✅ Validate required fields
+    const validateForm = () => {
+        const requiredFields = [
+            "fullName",
+            "email",
+            "phone",
+            "dob",
+            "gender",
+            "location",
+            "height",
+            "weight",
+            "skinTone",
+            "hairColor",
+            "eyeColor",
+            "bodyType",
+            "actingExperience",
+            "keySkills",
+            "previousWork",
+            "courses",
+            "headshot",
+            "fullPhoto",
+            "auditionVideo",
+            "portfolioLink",
+            "instagramLink",
+            "roleInfo",
+            "travelRelocation",
+            "specifiedDates",
+        ];
+
+        for (let field of requiredFields) {
+            if (!formData[field] || formData[field].toString().trim() === "") {
+                toast.error(`❌ Please fill the field: ${field}`);
+                return false;
+            }
+        }
+
+        if (!formData.consent1 || !formData.consent2 || !formData.consent3) {
+            toast.error("❌ You must agree to all consents before submitting.");
+            return false;
+        }
+
+        return true;
+    };
+
     // ✅ Submit job application
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!jobId) {
-            alert("❌ Job ID is missing. Please try again from a valid casting call.");
+            toast.error("❌ Job ID is missing. Please try again from a valid casting call.");
             return;
         }
+
+        // Run validation
+        if (!validateForm()) return;
 
         setLoading(true);
         try {
             const token = localStorage.getItem("token");
 
             const payload = {
-                job_id: jobId, // ✅ Now always from URL
+                job_id: jobId,
                 role_specific_info: formData.roleInfo,
                 travel: formData.travelRelocation === "Yes",
                 availability: formData.specifiedDates === "Yes",
@@ -125,12 +172,12 @@ const CastingApplicationForm = () => {
             });
 
             if (res.data.success) {
-                alert("✅ Application submitted successfully!");
+                toast.success("✅ Application submitted successfully!");
                 navigate(-1);
             }
         } catch (error) {
             console.error("❌ Error submitting application:", error);
-            alert(error.response?.data?.message || "Failed to submit application.");
+            toast.error(error.response?.data?.message || "Failed to submit application.");
         } finally {
             setLoading(false);
         }
@@ -146,12 +193,10 @@ const CastingApplicationForm = () => {
                     />
                     <h1 className="font-bold text-2xl">
                         Apply for {jobType || "this role"}
-                        
                     </h1>
                 </div>
                 <p className="text-primary text-lg">
-                    Submit your details carefully. A complete profile improves your
-                    chances.
+                    Submit your details carefully. A complete profile improves your chances.
                 </p>
             </div>
 

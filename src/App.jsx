@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
-import { AddJobPost, AllApplicantProfiles, CastingApplicationForm, CastingCallDetails, MyApplications, MySubscription, NewCastingCalls, PlanSubscription, PopularCastingCalls, PreviousJobPost, UpcomingProjects } from './components'
+import { AddJobPost, AllApplicantProfiles, CastingApplicationForm, CastingCallDetails, MyApplications, MySubscription, NewCastingCalls, PlanSubscription, PopularCastingCalls, PreviousJobPost, UpcomingProjects, ViewJobDetails } from './components'
 import ApplicantPhotoGallery from './components/producation/ApplicantPhotoGallery'
 import ApplicantProfile from './components/producation/ApplicantProfile'
 import ApplicationApplyDetails from './components/producation/ApplicationApplyDetails'
@@ -192,6 +192,14 @@ export default function App() {
           element={
             <ProductionLayout>
               <ApplicationApplyDetails />
+            </ProductionLayout>
+          }
+        />
+        <Route
+          path="/production/view-job-details/:id"
+          element={
+            <ProductionLayout>
+              <ViewJobDetails />
             </ProductionLayout>
           }
         />

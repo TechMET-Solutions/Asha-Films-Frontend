@@ -1,46 +1,11 @@
-// import { gif } from "../../assets";
-// import { jobs } from "../../data/home";
-// import { FaArrowRight } from "react-icons/fa";
-
-
-// const CastingCalls = ({latestJobs}) => {
-//   return (
-//     <div className="text-left mt-4 sm:mt-6">
-//       <div className="flex justify-between items-center mb-2">
-//         <div className="flex items-center gap-2">
-//           <img
-//             src={gif.bill}
-//             alt="Actor"
-//             className="w-8 sm:w-10 h-8 sm:h-10 mx-auto mb-2 object-cover"
-//           />
-//           <span className="font-bold text-md sm:text-lg">Casting Call/ Update</span>
-//         </div>
-//         <button className="text-xs sm:text-sm text-primary font-medium">View All ➜</button>
-//       </div>
-
-//       {jobs.map((job, i) => (
-//         <div
-//           key={i}
-//           className="bg-pink-100 rounded-xl p-3 sm:p-4 mb-2 sm:mb-3 shadow-md flex justify-between items-center casting-call-card border-3 border-transparent hover:border-primary"
-//         >
-//           <div>
-//             <h4 className="font-semibold text-xs sm:text-sm mb-1">{job.role} – {job.category}</h4>
-//             <p className="text-xs text-gray-600">
-//               Age: {job.age} | Location: {job.location} | Shoot: {job.shoot}
-//             </p>
-//           </div>
-//           <FaArrowRight className="text-sm" />
-//         </div>
-//       ))}
-//     </div>
-//   );
-// }
-
-// export default CastingCalls;
+import { useNavigate } from "react-router-dom";
 import { gif } from "../../assets";
 import { FaArrowRight } from "react-icons/fa";
 
 const CastingCalls = ({ latestJobs = [] }) => {
+
+  const navigate = useNavigate()
+
   return (
     <div className="text-left mt-4 sm:mt-6">
       <div className="flex justify-between items-center mb-2">
@@ -54,7 +19,10 @@ const CastingCalls = ({ latestJobs = [] }) => {
             Casting Call / Update
           </span>
         </div>
-        <button className="text-xs sm:text-sm text-primary font-medium">
+        <button
+        onClick={()=> navigate('/castingcalls')}
+        className="text-xs sm:text-sm text-primary font-medium">
+          
           View All ➜
         </button>
       </div>

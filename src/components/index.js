@@ -1,6 +1,5 @@
 import Navbar from "./home/Navbar"
 import PlanCard from "./home/PlanCard"
-import CastingCard from "./home/CastingCard"
 import HeroSearch from "./home/HeroSearch"
 import CastingCalls from "./home/CastingCalls"
 import FeaturedArtist from "./home/FeaturedArtist"
@@ -13,6 +12,7 @@ import AddJobPost from './producation/AddJobPost';
 import PreviousJobPost from './producation/PreviousJobPost';
 import UpcomingProjects from './producation/UpcomingProjects';
 import AllApplicantProfiles from './producation/AllApplicantProfiles';
+import ViewJobDetails from './producation/ViewJobDetails'
 
 // User 
 import UserHeader from "./user/UserHeader"
@@ -27,10 +27,10 @@ import CastingCallDetails from "./user/CastingCallDetails"
 
 
 export {
-    Navbar, PlanCard, CastingCard, HeroSearch, CastingCalls, FeaturedArtist, LoginButtons,
+    Navbar, PlanCard, HeroSearch, CastingCalls, FeaturedArtist, LoginButtons,
 
     // producation
-    ProductionHeader, ProductionProfileCard, AddJobPost, PreviousJobPost, UpcomingProjects, AllApplicantProfiles,
+    ProductionHeader, ProductionProfileCard, AddJobPost, PreviousJobPost, UpcomingProjects, AllApplicantProfiles,ViewJobDetails,
 
     // user
     UserHeader, UserProfileCard, NewCastingCalls, MyApplications, PopularCastingCalls, PlanSubscription, MySubscription, CastingApplicationForm, CastingCallDetails

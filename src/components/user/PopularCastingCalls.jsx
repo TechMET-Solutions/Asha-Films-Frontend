@@ -3,6 +3,8 @@ import axios from "axios";
 import { API } from "../../api";
 import { useNavigate } from "react-router-dom";
 import { icons } from "../../assets";
+import { FaCalendarAlt, FaMapMarkerAlt } from "react-icons/fa";
+import CastingCard from "../CastingCard";
 
 function PopularCastingCalls() {
   const [jobs, setJobs] = useState([]);
@@ -83,25 +85,29 @@ function PopularCastingCalls() {
               <CastingCard
                 key={job.id}
                 image={job.image}
-                category={job.project_type}
-                title={job.project_type}
-                description={job.project_description}
-                location={job.city_location}
-                date={
-                  job.application_deadline
-                    ? job.application_deadline.slice(0, 10)
-                    : job.created_at?.slice(0, 10)
+                badge={job.project_type || job.role}
+                title={job.project_type || job.title}
+                description={
+                  job.project_description
+                    ? job.project_description
+                    : "No description"
                 }
-                // status={
-                //   daysLeft > 0
-                //     ? `Expire in ${daysLeft} day${daysLeft > 1 ? "s" : ""}`
-                //     : "Expired"
-                // }
-                onViewMore={() => handleViewMore(job.id, job.project_type)}
-                // onApplicantsClick={() =>
-                //   handleApplicants(job.id, job.project_type)
-                // }
-              />
+                viewMoreLink={`/production/view-job-details/${job.id}`}
+              >
+                {/* Extra details inside card */}
+                <div className="flex items-center gap-4 text-gray-600 text-sm">
+                  <span className="flex items-center gap-1">
+                    <FaMapMarkerAlt className="text-gray-500" /> {job.city_location}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <FaCalendarAlt className="text-gray-500" />{" "}
+                    {new Date(job.application_deadline).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                    })}
+                  </span>
+                </div>
+              </CastingCard>
             );
           })}
         </div>
@@ -113,100 +119,3 @@ function PopularCastingCalls() {
 }
 
 export default PopularCastingCalls;
-
-const CastingCard = ({
-  image,
-  category,
-  title,
-  description,
-  role,
-  location,
-  date,
-  status,
-  onViewMore,
-  onApplicantsClick,
-}) => {
-  return (
-    <div
-      className="relative w-full max-w-sm h-[360px] flex flex-col shadow-md overflow-hidden bg-white p-3 
-                 transform transition duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-2 hover:border-primary"
-    >
-      {/* Image */}
-      <div className="relative h-40 w-full">
-        <img
-          src={image}
-          alt={title}
-          className="w-full h-full object-cover"
-        />
-        {role && (
-          <span className="absolute bottom-2 right-2 border border-primary bg-white text-primary text-xs px-2 py-1">
-            {role}
-          </span>
-        )}
-      </div>
-
-      {/* Category Badge */}
-      {category && (
-        <div className="absolute right-5 top-[9.5rem] bg-white text-black font-medium px-3 py-0.5 shadow border border-primary text-xs">
-          {category}
-        </div>
-      )}
-
-      {/* Content */}
-      <div className="flex flex-col justify-between flex-grow p-3">
-        {/* Title */}
-        <h3 className="font-semibold text-lg line-clamp-1">{title}</h3>
-
-        {/* Description */}
-        <p className="text-gray-600 text-sm mt-1 line-clamp-3">
-          {description || "No description available"}
-        </p>
-        <button
-          className="text-primary text-sm font-bold mt-1 self-start"
-          onClick={onViewMore}
-        >
-          View More
-        </button>
-
-        {/* Location & Date */}
-        <div className="flex items-center justify-between mt-3 text-gray-500 text-xs">
-          <div className="flex items-center gap-1">
-            <img
-              src={icons.location}
-              alt="location"
-              className="w-3.5 h-3.5 object-contain"
-            />
-            <span>{location || "N/A"}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <img
-              src={icons.calender}
-              alt="calendar"
-              className="w-3.5 h-3.5 object-contain"
-            />
-            <span>{date || "TBD"}</span>
-          </div>
-        </div>
-
-        {/* Footer */}
-        {/* <div className="flex justify-between items-center mt-4">
-          <span
-            className={`font-medium text-sm ${
-              status?.toLowerCase().includes("expire")
-                ? "text-red-500"
-                : "text-green-600"
-            }`}
-          >
-            {status || "Open"}
-          </span>
-          <button
-            onClick={onApplicantsClick}
-            className="border border-gray-400 px-4 py-1 text-sm hover:bg-gray-100 transition"
-          >
-            Apply
-          </button>
-        </div> */}
-      </div>
-    </div>
-  );
-};

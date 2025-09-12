@@ -57,9 +57,10 @@ function PreviousJobPost() {
             title={job.project_type}
             description={
               job.project_description
-                ? job.project_description.slice(0, 60) + "..."
+                ? job.project_description
                 : "No description"
             }
+            viewMoreLink={`/production/view-job-details/${job.id}`}
             footer={
               <>
                 <span className="text-red-600 font-medium text-sm">Closed</span>
@@ -82,12 +83,12 @@ function PreviousJobPost() {
                 <FaCalendarAlt className="text-gray-500" />{" "}
                 {job.application_deadline
                   ? new Date(job.application_deadline).toLocaleDateString(
-                      "en-GB",
-                      {
-                        day: "2-digit",
-                        month: "short",
-                      }
-                    )
+                    "en-GB",
+                    {
+                      day: "2-digit",
+                      month: "short",
+                    }
+                  )
                   : "N/A"}
               </span>
             </div>

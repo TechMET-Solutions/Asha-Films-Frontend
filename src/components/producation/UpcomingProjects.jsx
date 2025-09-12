@@ -65,9 +65,10 @@ function UpcomingProjects() {
             title={job.project_type || job.title}
             description={
               job.project_description
-                ? job.project_description.slice(0, 60) + "..."
-                : "No description available"
+                ? job.project_description
+                : "No description"
             }
+            viewMoreLink={`/production/view-job-details/${job.id}`}
             footer={
               <>
                 <span className="text-red-600 font-medium text-sm">
