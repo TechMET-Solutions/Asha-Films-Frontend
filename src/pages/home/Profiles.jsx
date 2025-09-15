@@ -13,6 +13,7 @@ import {
 import { useLocation } from "react-router-dom";
 import { icons } from "../../assets";
 import { CategorySelector } from "../../components/ui";
+import { API } from "../../api";
 
 
 const ProfileCard = ({ name, age, gender, location, image }) => {
@@ -140,7 +141,7 @@ const fetchProfiles = async (appliedFilters = {}) => {
     };
 
     const res = await axios.post(
-      `http://localhost:8080/api/pages/filter`,
+      `${API}/api/pages/filter`,
       payload
     );
 

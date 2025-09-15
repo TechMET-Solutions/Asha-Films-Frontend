@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { API } from "../../api";
 
 const Plans = () => {
    const [plans, setPlans] = useState([]);
@@ -8,7 +9,7 @@ const [selectedPlan, setSelectedPlan] = useState(null); // For modal
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/plans", {
+        const response = await axios.get(`${API}/api/plans`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
