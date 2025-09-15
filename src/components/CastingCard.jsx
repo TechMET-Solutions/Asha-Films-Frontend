@@ -1,18 +1,15 @@
 import React from "react";
+import { FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 function CastingCard({
-  image,
-  badge,
   title,
-  subtitle,
   description,
-  footer,
-  children,
-  onClick,
-  hover = true,
-  descriptionLimit = 100,
-  viewMoreLink
+  location,
+  date,
+  closingText,
+  viewMoreLink,
+  onApply,
 }) {
   const navigate = useNavigate();
 
@@ -22,65 +19,71 @@ function CastingCard({
     }
   };
 
+  const handleOnApply = () => {
+    if (onApply) {
+      navigate(onApply);
+    }
+  };
+
   return (
     <div
-      onClick={onClick}
-      className={`bg-white shadow-md overflow-hidden border border-gray-200
-        ${hover ? "hover:shadow-lg hover:scale-[1.02] hover:border-primary" : ""}
-        transform transition duration-300 w-80`}
+      className="group bg-white shadow-md border border-gray-200 overflow-hidden max-w-sm 
+                 transition-colors duration-300 hover:border-primary"
     >
-      {/* Image */}
-      <div className="relative h-50 w-full bg-gray-100">
-        {image ? (
-          <img src={image} alt={title || "card image"} className="w-full h-full object-cover" />
+      {/* Header */}
+      <h3
+        className="text-lg font-semibold bg-primary text-center text-white p-2 
+                   transition-colors duration-300 hover:scale-[1.02] group-hover:bg-white group-hover:text-primary"
+      >
+        {title}
+      </h3>
+
+      {/* Description (no color change on hover) */}
+      <p className="text-sm px-4 text-gray-600 mt-2">
+        {description?.length > 100 ? (
+          <>
+            {description.slice(0, 100)}...
+            <span
+              className="text-black font-medium cursor-pointer"
+              onClick={handleViewMore}
+            >
+              View More
+            </span>
+          </>
         ) : (
-          <div className="w-full h-40 flex items-center justify-center text-gray-400 text-xs">
-            No Image
-          </div>
+          description || "No description"
         )}
-        <span className="absolute bottom-2 right-2 bg-white border border-primary text-primary text-xs px-2 py-1">
-          {badge || ""}
-        </span>
-      </div>
+      </p>
 
-      {/* Content */}
-      <div className="p-4 space-y-2">
-        {/* Title */}
-        <h2 className="font-semibold text-gray-800 text-lg min-h-[20px]">
-          {title || ""}
-        </h2>
-
-        {/* Description */}
-        <p className="text-gray-600 text-xs mt-2 min-h-[32px]">
-          {description ? (
-            <>
-              {description.length > descriptionLimit
-                ? `${description.slice(0, descriptionLimit)}...`
-                : description}
-
-              {description.length > descriptionLimit && viewMoreLink && (
-                <button
-                  type="button"
-                  onClick={handleViewMore}
-                  className="text-primary text-xs font-semibold underline ml-1"
-                >
-                  View More
-                </button>
-              )}
-            </>
-          ) : (
-            ""
-          )}
-        </p>
-
-        {/* Extra custom content */}
-        <div className="min-h-[20px]">{children || ""}</div>
-
-        {/* Footer */}
-        <div className="mt-4 flex justify-between items-center min-h-[20px]">
-          {footer || ""}
+      {/* Extra Details (no color change on hover) */}
+      <div className="flex px-4 items-center gap-6 mt-4 text-gray-600 text-sm">
+        <div className="flex items-center gap-2">
+          <FaMapMarkerAlt className="w-4 h-4" />
+          <span>{location}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <FaCalendarAlt className="w-4 h-4" />
+          <span>{date}</span>
         </div>
       </div>
+
+      {/* Apply Button */}
+      <div className="flex items-center justify-center">
+        <button
+          onClick={handleOnApply}
+          className="w-[80%] py-2 px-4 border border-primary text-gray-700 font-medium mt-4 
+                     transition-colors duration-300 group-hover:bg-primary group-hover:text-white"
+        >
+          Apply
+        </button>
+      </div>
+
+      {/* Closing Text */}
+      {closingText && (
+        <p className="text-center p-4 text-red-600 text-sm font-medium mt-2">
+          {closingText}
+        </p>
+      )}
     </div>
   );
 }

@@ -52,13 +52,14 @@ function MyApplication() {
       state: { jobId, jobType },
     });
   };
-
-    const calculateDaysLeft = (deadline) => {
-    if (!deadline) return "N/A";
+    const getClosingText = (deadline) => {
+    if (!deadline) return null;
     const today = new Date();
-    const end = new Date(deadline);
-    const diff = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
-    return diff > 0 ? diff : 0;
+    const endDate = new Date(deadline);
+    const diffTime = endDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) return "Closed";
+    return `Closes in ${diffDays} Day${diffDays > 1 ? "s" : ""}`;
   };
 
   if (loading) {
@@ -76,42 +77,23 @@ function MyApplication() {
             return (
               <CastingCard
                 key={job.id}
-                image={job.image_url}
-                badge={job.project_type || job.role}
-                title={job.project_type || job.title}
+                title={job.project_type}
                 description={
-                  job.project_description
-                    ? job.project_description
-                    : "No description"
+                  job.project_description?.trim() || "No description"
                 }
-                viewMoreLink={`/production/view-job-details/${job.id}`}
-                footer={
-                  <>
-                    <span className="text-red-600 font-medium text-sm">
-                      Closes in {calculateDaysLeft(job.application_deadline)} days
-                    </span>
-                    <button
-                      className="text-green-500 font-semibold px-4 py-1 rounded hover:text-green-500 transition"
-                    >
-                      Applied
-                    </button>
-                  </>
-                }
-              >
-                {/* Extra details inside card */}
-                <div className="flex items-center gap-4 text-gray-600 text-sm">
-                  <span className="flex items-center gap-1">
-                    <FaMapMarkerAlt className="text-gray-500" /> {job.city_location}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <FaCalendarAlt className="text-gray-500" />{" "}
-                    {new Date(job.application_deadline).toLocaleDateString("en-GB", {
+                location={job.city_location || "Unknown"}
+                date={
+                  job.application_deadline
+                    ? new Date(job.application_deadline).toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "short",
-                    })}
-                  </span>
-                </div>
-              </CastingCard>
+                    })
+                    : "N/A"
+                }
+                closingText={getClosingText(job.application_deadline)}
+                viewMoreLink={() => navigate(`/production/view-job-details/${job.id}`)}
+                onApply={() => handleApplicants(job.id)}
+              />
             );
           })}
 

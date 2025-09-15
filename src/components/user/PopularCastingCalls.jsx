@@ -56,26 +56,36 @@ function PopularCastingCalls() {
     });
   };
 
+    const getClosingText = (deadline) => {
+    if (!deadline) return null;
+    const today = new Date();
+    const endDate = new Date(deadline);
+    const diffTime = endDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) return "Closed";
+    return `Closes in ${diffDays} Day${diffDays > 1 ? "s" : ""}`;
+  };
+
   if (loading) {
     return <p className="text-center py-10">Loading jobs...</p>;
   }
 
   return (
     <div className="max-w-7xl mx-auto p-4">
-       <h2
- 
-  style={{
-    fontFamily: "'Source Sans 3', sans-serif",
-    fontWeight: 700,
-    fontStyle: "bold",
-    fontSize: "24px",
-    lineHeight: "100%",
-    letterSpacing: "5%",
-              }}
-              className='text-[#8B3C68] mb-6'
->
- Popular Casting Calls
-</h2>
+      <h2
+
+        style={{
+          fontFamily: "'Source Sans 3', sans-serif",
+          fontWeight: 700,
+          fontStyle: "bold",
+          fontSize: "24px",
+          lineHeight: "100%",
+          letterSpacing: "5%",
+        }}
+        className='text-[#8B3C68] mb-6'
+      >
+        Popular Casting Calls
+      </h2>
       {jobs.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-6">
           {jobs.map((job) => {
@@ -84,30 +94,23 @@ function PopularCastingCalls() {
             return (
               <CastingCard
                 key={job.id}
-                image={job.image}
-                badge={job.project_type || job.role}
-                title={job.project_type || job.title}
+                title={job.project_type}
                 description={
-                  job.project_description
-                    ? job.project_description
-                    : "No description"
+                  job.project_description?.trim() || "No description"
                 }
-                viewMoreLink={`/production/view-job-details/${job.id}`}
-              >
-                {/* Extra details inside card */}
-                <div className="flex items-center gap-4 text-gray-600 text-sm">
-                  <span className="flex items-center gap-1">
-                    <FaMapMarkerAlt className="text-gray-500" /> {job.city_location}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <FaCalendarAlt className="text-gray-500" />{" "}
-                    {new Date(job.application_deadline).toLocaleDateString("en-GB", {
+                location={job.city_location || "Unknown"}
+                date={
+                  job.application_deadline
+                    ? new Date(job.application_deadline).toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "short",
-                    })}
-                  </span>
-                </div>
-              </CastingCard>
+                    })
+                    : "N/A"
+                }
+                closingText={getClosingText(job.application_deadline)}
+                viewMoreLink={handleViewMore}
+                onApply={handleApplicants}
+              />
             );
           })}
         </div>
