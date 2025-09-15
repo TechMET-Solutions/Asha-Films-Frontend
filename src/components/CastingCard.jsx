@@ -27,12 +27,12 @@ function CastingCard({
       onClick={onClick}
       className={`bg-white shadow-md overflow-hidden border border-gray-200
         ${hover ? "hover:shadow-lg hover:scale-[1.02] hover:border-primary" : ""}
-        transform transition duration-300`}
+        transform transition duration-300 w-80`}
     >
       {/* Image */}
-      <div className="relative h-40 w-full bg-gray-100">
+      <div className="relative h-50 w-full bg-gray-100">
         {image ? (
-          <img src={image} alt={title || "card image"} className="w-full h-40 object-cover" />
+          <img src={image} alt={title || "card image"} className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-40 flex items-center justify-center text-gray-400 text-xs">
             No Image
@@ -46,7 +46,7 @@ function CastingCard({
       {/* Content */}
       <div className="p-4 space-y-2">
         {/* Title */}
-        <h2 className="font-semibold text-gray-800 text-sm min-h-[20px]">
+        <h2 className="font-semibold text-gray-800 text-lg min-h-[20px]">
           {title || ""}
         </h2>
 

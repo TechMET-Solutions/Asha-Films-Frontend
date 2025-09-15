@@ -102,7 +102,6 @@ const CastingCalls = () => {
                       ? job.project_description
                       : "No description"
                   }
-                  viewMoreLink={`/production/view-job-details/${job.id}`}
                   footer={
                   <>
                     <span className="text-red-600 font-medium text-sm">
