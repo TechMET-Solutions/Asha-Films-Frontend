@@ -7,10 +7,11 @@ import axios from "axios";
 import { API } from "../../api";
 
 const initialState = {
+  projectTitle:"",
   projectType: "",
   projectDescription: "",
   languageRequired: "",
-  roleTitle: "",
+  // roleTitle: "",
   roleType: "",
   gender: "",
   ageRange: "",
@@ -25,10 +26,10 @@ const initialState = {
   auditionDates: "",
   shootDates: "",
   shootDuration: "",
-  applicationDeadline: "",
   availability: "",
-  compensation: "",
-  appPhoto: null,
+  // applicationDeadline: "",
+  // compensation: "",
+  // appPhoto: null,
 };
 
 const AddJobPost = () => {
@@ -78,6 +79,7 @@ const AddJobPost = () => {
 
       // FormData (for text + file)
       const fd = new FormData();
+      fd.append("project_type", formData.projectTitle);
       fd.append("project_type", formData.projectType);
       fd.append("project_description", formData.projectDescription);
       fd.append("language_required", formData.languageRequired);
@@ -138,6 +140,12 @@ const AddJobPost = () => {
         <div className="space-y-4">
           <h2 className="text-lg font-semibold text-primary">• Project Information</h2>
           <Input
+            name="projectTitle"
+            value={formData.projectTitle}
+            onChange={handleChange}
+            placeholder="Project Title*"
+          />
+          <Input
             name="projectType"
             value={formData.projectType}
             onChange={handleChange}
@@ -157,12 +165,12 @@ const AddJobPost = () => {
           />
 
           <h2 className="text-lg font-semibold text-primary mt-8">• Role Details</h2>
-          <Input
+          {/* <Input
             name="roleTitle"
             value={formData.roleTitle}
             onChange={handleChange}
             placeholder="Role Title (e.g Lead Male, Dancer, Supporting Role)*"
-          />
+          /> */}
           <Select
             name="roleType"
             value={formData.roleType}
@@ -275,13 +283,13 @@ const AddJobPost = () => {
             options={["Full-time", "Part-time", "Flexible"]}
           />
 
-          <h2 className="text-lg font-semibold text-primary mt-8">• Compensation</h2>
+          {/* <h2 className="text-lg font-semibold text-primary mt-8">• Compensation</h2>
           <Input
             name="compensation"
             value={formData.compensation}
             onChange={handleChange}
             placeholder="Paid / Unpaid / Profit Share / Other"
-          />
+          /> */}
 
        
 
