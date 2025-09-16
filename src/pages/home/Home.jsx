@@ -7,6 +7,10 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    document.title = "Home | 1 on 1 Screen";
+  }, []);
+
+  useEffect(() => {
     const fetchHomeData = async () => {
       try {
         const res = await fetch(`${API}/api/pages/home`);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import CategoryCard from '../../components/home/CategoryCard';
 import CategorySelector from '../../components/ui/CategorySelector';
 
@@ -14,6 +14,10 @@ const Services = () => {
     { title: "Talent Agencies", count: "9695", gender1: "MALE", gender2: "FEMALE" },
     { title: "Theater Artist", count: "4705", gender1: "MALE", gender2: "FEMALE" },
   ];
+
+   useEffect(() => {
+    document.title = "Services | 1 on 1 Screen";
+  }, []);
 
   return (
     <div className="mt-16 mb-4 max-w-[1440px] mx-auto">

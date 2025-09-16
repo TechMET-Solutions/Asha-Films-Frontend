@@ -1,8 +1,14 @@
 
 import { FaMapMarkerAlt, FaEnvelope, FaPhoneAlt } from 'react-icons/fa';
 import { Title } from '../../components/ui';
+import { useEffect } from 'react';
 
 export default function Contact() {
+
+   useEffect(() => {
+      document.title = "Contact Us | 1 on 1 Screen";
+    }, []);
+
   return (
     <section className="py-16 px-4 md:px-8 lg:px-20 bg-white text-gray-800">
       <div className="max-w-6xl mx-auto text-center">

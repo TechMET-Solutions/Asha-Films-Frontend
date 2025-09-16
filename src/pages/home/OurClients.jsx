@@ -41,6 +41,10 @@ function OurClients() {
     const [clients, setClients] = useState([]);
     const [loading, setLoading] = useState(true);
 
+     useEffect(() => {
+    document.title = "Our Clients | 1 on 1 Screen";
+  }, []);
+
     useEffect(() => {
     const fetchClients = async () => {
         try {

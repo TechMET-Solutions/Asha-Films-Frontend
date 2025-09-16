@@ -9,6 +9,10 @@ const CastingCalls = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
+   useEffect(() => {
+    document.title = "Casting Calls | 1 on 1 Screen";
+  }, []);
+
   // ✅ Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 12; // show 6 jobs per page

@@ -93,6 +93,10 @@ const AboutUs = () => {
   const [rightImage, setRightImage] = useState("");
 
   useEffect(() => {
+    document.title = "About Us";
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         // ✅ Fetch About Us content

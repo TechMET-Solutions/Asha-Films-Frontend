@@ -11,6 +11,10 @@ function ProjectDetails() {
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
 
+   useEffect(() => {
+    document.title = "Project Details | 1 on 1 Screen";
+  }, []);
+
   useEffect(() => {
     const fetchProject = async () => {
       try {

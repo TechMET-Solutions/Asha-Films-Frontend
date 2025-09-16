@@ -118,6 +118,10 @@ const Profiles = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
 const location = useLocation();
 
+ useEffect(() => {
+    document.title = "Profiles | 1 on 1 Screen";
+  }, []);
+
 // Store selected filters
 const [filters, setFilters] = useState({
   gender: [],

@@ -10,6 +10,10 @@ function Projects() {
   const [selectedType, setSelectedType] = useState("All"); // filter state
   const navigate = useNavigate();
 
+   useEffect(() => {
+    document.title = "Projects | 1 on 1 Screen";
+  }, []);
+
   // Fetch projects from API
   const fetchProjects = async (type = "All") => {
     try {

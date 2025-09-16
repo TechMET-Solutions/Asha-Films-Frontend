@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Not from "../../assets/images/Not.png"
 import rightClick from "../../assets/images/rightClick.png";
 import righttick from "../../assets/images/righttick.png";
@@ -50,6 +50,10 @@ const Plans = () => {
   "10 Audition video upload",
   "10 work links"
 ];
+
+ useEffect(() => {
+    document.title = "Plans | 1 on 1 Screen";
+  }, []);
 
   return (
     <div>
