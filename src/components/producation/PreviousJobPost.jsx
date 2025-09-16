@@ -32,11 +32,6 @@ function PreviousJobPost() {
     fetchJobs();
   }, []);
 
-  // ✅ Navigate to applicants
-  const handleApplicants = (id) => {
-    navigate(`/production/applicant-profile/${id}`);
-  };
-
   // ✅ Calculate "Closes in X Days"
   const getClosingText = (deadline) => {
     if (!deadline) return null;
@@ -76,8 +71,8 @@ function PreviousJobPost() {
                 : "N/A"
             }
             closingText={getClosingText(job.application_deadline)}
-            viewMoreLink={() => navigate(`/production/view-job-details/${job.id}`)}
-            onApply={() => handleApplicants(job.id)}
+            viewMoreLink={`/production/view-job-details/${job.id}`}
+            onApply={`/production/applicant-profile/${job.id}`}
           />
         ))}
       </div>

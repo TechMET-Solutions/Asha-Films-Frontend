@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Input from "../ui/Input";
 import Select from "../ui/Select";
@@ -171,11 +170,12 @@ const AddJobPost = () => {
             placeholder="Role Type*"
             options={["Primary", "Secondary", "Tertiary"]}
           />
-          <Input
+          <Select
             name="gender"
             value={formData.gender}
             onChange={handleChange}
             placeholder="Gender (Male/Female/Any)*"
+            options={["Male", "Female", "Other"]}
           />
           <Input
             name="ageRange"
@@ -267,11 +267,12 @@ const AddJobPost = () => {
             onChange={handleChange}
             placeholder="Application Deadline*"
           />
-          <Input
+          <Select
             name="availability"
             value={formData.availability}
             onChange={handleChange}
             placeholder="Availability Required (Full-time/ Part-time/ Flexible)*"
+            options={["Full-time", "Part-time", "Flexible"]}
           />
 
           <h2 className="text-lg font-semibold text-primary mt-8">• Compensation</h2>
@@ -282,36 +283,7 @@ const AddJobPost = () => {
             placeholder="Paid / Unpaid / Profit Share / Other"
           />
 
-          <h2 className="text-lg font-semibold text-primary mt-8">• App Photo</h2>
-          <div
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={handleDrop}
-            className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer hover:border-primary transition"
-          >
-            {preview ? (
-              <img src={preview} alt="Preview" className="max-h-40 object-contain" />
-            ) : (
-              <>
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/1829/1829586.png"
-                  alt="upload icon"
-                  className="h-12 mb-3 opacity-60"
-                />
-                <p className="text-gray-500">
-                  Drop your image here{" "}
-                  <label className="text-blue-500 cursor-pointer">
-                    or browse
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="hidden"
-                    />
-                  </label>
-                </p>
-              </>
-            )}
-          </div>
+       
 
           <FormButton
             type="submit"

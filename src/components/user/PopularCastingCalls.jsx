@@ -44,18 +44,6 @@ function PopularCastingCalls() {
     fetchJobs();
   }, []);
 
-  const handleViewMore = (jobId, jobType) => {
-    navigate(`/user/castingcalldetails/${jobId}`, {
-      state: { jobId, jobType },
-    });
-  };
-
-  const handleApplicants = (jobId, jobType) => {
-    navigate(`/user/castingapplicaton/${jobId}`, {
-      state: { jobId, jobType },
-    });
-  };
-
     const getClosingText = (deadline) => {
     if (!deadline) return null;
     const today = new Date();
@@ -108,8 +96,10 @@ function PopularCastingCalls() {
                     : "N/A"
                 }
                 closingText={getClosingText(job.application_deadline)}
-                viewMoreLink={handleViewMore}
-                onApply={handleApplicants}
+                viewMoreLink={`/production/view-job-details/${job.id}`}
+                // onApply={`/user/castingapplicaton/${job.id}`}
+                // applied={true}
+                showActions={false} // ✅ hide Apply/View, only card content
               />
             );
           })}

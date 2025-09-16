@@ -102,7 +102,7 @@ export default function App() {
           }
         />
         <Route
-          path="/user/castingapplicaton/:jobId/"
+          path="/user/castingapplicaton/:userId/:jobId"
           element={
             <ProtectedRoute role={["user"]}>
               <UserLayout>
@@ -112,7 +112,7 @@ export default function App() {
           }
         />
         <Route
-          path="/user/castingcalldetails/:jobId"
+          path="/user/castingcalldetails/:id"
           element={
             <ProtectedRoute role={["user"]}>
               <UserLayout>

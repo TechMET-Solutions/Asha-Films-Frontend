@@ -47,11 +47,7 @@ function MyApplication() {
     fetchJobs();
   }, []);
 
-  const handleApplicants = (jobId, jobType) => {
-    navigate(`/user/castingapplicaton/${jobId}`, {
-      state: { jobId, jobType },
-    });
-  };
+
     const getClosingText = (deadline) => {
     if (!deadline) return null;
     const today = new Date();
@@ -91,8 +87,8 @@ function MyApplication() {
                     : "N/A"
                 }
                 closingText={getClosingText(job.application_deadline)}
-                viewMoreLink={() => navigate(`/production/view-job-details/${job.id}`)}
-                onApply={() => handleApplicants(job.id)}
+                viewMoreLink={`/production/view-job-details/${job.id}`}
+                applied={true}
               />
             );
           })}

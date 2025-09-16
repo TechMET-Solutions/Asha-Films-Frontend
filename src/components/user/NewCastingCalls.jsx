@@ -3,10 +3,10 @@ import axios from "axios";
 import { API } from "../../api";
 import { useNavigate } from "react-router-dom";
 import CastingCard from "../CastingCard";
-import { FaCalendarAlt, FaMapMarkerAlt } from "react-icons/fa";
 
 function NewCastingCalls() {
   const [jobs, setJobs] = useState([]);
+  console.log(jobs,"jobs")
   const [appliedJobIds, setAppliedJobIds] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -56,20 +56,36 @@ function NewCastingCalls() {
     return `Closes in ${diffDays} Day${diffDays > 1 ? "s" : ""}`;
   };
 
-  const handleApplicants = (jobId, jobType) => {
-    try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (!user || !user.id) {
-        console.error("❌ User not found in localStorage");
-        return;
-      }
+  // const handleApplicants = (jobId, jobType) => {
+  //   try {
+  //     const user = JSON.parse(localStorage.getItem("user"));
+  //     if (!user || !user.id) {
+  //       console.error("❌ User not found in localStorage");
+  //       return;
+  //     }
 
-      navigate(`/user/castingapplicaton/${user.id}`)
+  //     navigate(`/user/castingapplicaton/${user.id}`)
 
-    } catch (error) {
-      console.error("❌ Error parsing user from localStorage:", error);
+  //   } catch (error) {
+  //     console.error("❌ Error parsing user from localStorage:", error);
+  //   }
+  // };
+
+  const handleApplicants = (jobId) => {
+    debugger
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user || !user.id) {
+      console.error("❌ User not found in localStorage");
+      return;
     }
-  };
+
+    // navigate with both userId and jobId (so it knows what job they applied to)
+    navigate(`/user/castingapplicaton/${user.id}/${jobId}`);
+  } catch (error) {
+    console.error("❌ Error parsing user from localStorage:", error);
+  }
+};
 
 
   if (loading) {
@@ -81,8 +97,8 @@ function NewCastingCalls() {
       {jobs.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-6">
           {jobs.map((job) => {
-            const daysLeft = getDaysLeft(job.application_deadline);
-            const alreadyApplied = appliedJobIds.includes(job.id);
+            // const daysLeft = getDaysLeft(job.application_deadline);
+            // const alreadyApplied = appliedJobIds.includes(job.id);
 
             return (
               <CastingCard
@@ -101,8 +117,9 @@ function NewCastingCalls() {
                     : "N/A"
                 }
                 closingText={getClosingText(job.application_deadline)}
-                viewMoreLink={() => navigate(`/production/view-job-details/${job.id}`)}
+                viewMoreLink={`/production/view-job-details/${job.id}`}
                 onApply={() => handleApplicants(job.id)}
+                type='user'
               />
             );
           })}

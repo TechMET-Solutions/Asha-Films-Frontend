@@ -21,6 +21,8 @@ function UpcomingProjects() {
           },
         });
 
+        console.log(res.data)
+
         if (res.data.success) {
           setJobs(res.data.data);
         } else {
@@ -35,10 +37,6 @@ function UpcomingProjects() {
 
     fetchJobs();
   }, []);
-
-  const handleApplicants = (id) => {
-    navigate(`/production/applicant-profile/${id}`);
-  };
 
   const calculateDaysLeft = (deadline) => {
     if (!deadline) return null;
@@ -79,7 +77,7 @@ function UpcomingProjects() {
               : "N/A"}
             closingText={calculateDaysLeft(job.application_deadline)}
             viewMoreLink={`/production/view-job-details/${job.id}`}
-            onApply={handleApplicants}
+            onApply={`/production/applicant-profile/${job.id}`}
           />
         ))}
       </div>
