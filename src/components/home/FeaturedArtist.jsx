@@ -115,8 +115,8 @@ const FeaturedArtist = ({ featuredArtists = [] }) => {
       <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-4">
         Featured artist by 1on1 screen
       </h2>
-
-      <Swiper
+      <div className="w-[424px] h-[227px] mb-[100px]">
+         <Swiper
         className="mySwiper featured-artist-swiper"
         modules={[Pagination, EffectCoverflow, Autoplay]}
         effect="coverflow"
@@ -159,6 +159,8 @@ const FeaturedArtist = ({ featuredArtists = [] }) => {
           </SwiperSlide>
         ))}
       </Swiper>
+</div>
+     
     </div>
   );
 };

@@ -28,7 +28,7 @@ export default function HomePage() {
   if (!homeData) return <p className="text-center">No data found</p>;
 
   return (
-    <div className="min-h-screen bg-white-300 p-4 mt-8 md:p-8">
+    <div className="min-h-screen bg-white-300 p-4 mt-8 ">
       {/* CSS effects */}
       <style>
         {`
@@ -54,7 +54,7 @@ export default function HomePage() {
         `}
       </style>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mx-auto">
         {/* Left Section */}
         <div className="space-y-4 md:space-y-6">
           <HeroSearch birthdayArtists={homeData.birthday_artists} />
@@ -67,7 +67,7 @@ export default function HomePage() {
         </div>
 
         {/* Right Section */}
-        <div className="space-y-4 md:space-y-6">
+        <div className="space-y-4 md:space-y-6 ">
           <LoginButtons />
         </div>
       </div>

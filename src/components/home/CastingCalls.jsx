@@ -21,7 +21,7 @@ const CastingCalls = ({ latestJobs = [] }) => {
         </div>
         <button
         onClick={()=> navigate('/castingcalls')}
-        className="text-xs sm:text-sm text-primary font-medium">
+        className="text-xs sm:text-sm text-primary font-medium cursor-pointer">
           
           View All ➜
         </button>

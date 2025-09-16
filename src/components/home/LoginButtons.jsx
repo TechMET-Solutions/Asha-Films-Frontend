@@ -64,7 +64,7 @@ const LoginButtons = () => {
   return (
     <div className="w-full flex flex-col items-center gap-6 sm:gap-8 px-4">
       {/* Talent Login */}
-      <div className="bg-pink-100 rounded-xl p-9 text-center shadow-md w-full max-w-xs sm:max-w-sm md:max-w-md">
+      <div className="bg-[#8B3C681F] rounded-xl p-9 text-center shadow-md w-[240px] max-w-xs sm:max-w-sm md:max-w-md">
         <img
           src={icons.talentlogin}
           alt="Talent Login"
@@ -82,7 +82,7 @@ const LoginButtons = () => {
       </div>
 
       {/* Client Login */}
-      <div className="bg-pink-100 rounded-xl p-9 text-center shadow-md w-full max-w-xs sm:max-w-sm md:max-w-md">
+      <div className="bg-[#8B3C681F] rounded-xl p-9 text-center shadow-md w-[240px] max-w-xs sm:max-w-sm md:max-w-md">
         <img
           src={icons.clientlogin}
           alt="Client Login"
