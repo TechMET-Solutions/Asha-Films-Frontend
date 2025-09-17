@@ -10,7 +10,7 @@ const ProfileCard = ({
     onAction = () => {},
 }) => {
     return (
-        <div className="max-w-xs bg-white shadow-md  overflow-hidden flex flex-col transform transition duration-300 hover:border-4 hover:border-primary">
+        <div className="max-w-xs bg-white shadow-md p-2  overflow-hidden flex flex-col transform transition duration-300 hover:border-4 hover:border-primary">
             {/* Top Image */}
             <div className="w-full h-48 p-2 overflow-hidden bg-gray-100 flex items-center justify-center">
                 <img
@@ -28,7 +28,7 @@ const ProfileCard = ({
             {/* Bottom Section */}
             <div className="flex flex-col sm:flex-row p-4 gap-4 flex-grow">
                 {/* Left (Details) */}
-                <div className="sm:w-2/3 flex flex-col justify-center text-gray-800 space-y-1">
+                <div className="sm:w-2/3 flex flex-col justify-center text-gray-800 space-y-2">
                     <p className="text-sm font-semibold">
                         <span className="font-bold">Name:</span> {name}
                     </p>
@@ -43,12 +43,11 @@ const ProfileCard = ({
                     </p>
                 </div>
                 {/* Right (Button) */}
-                <div className="sm:w-1/3 flex sm:items-end justify-center sm:justify-end">
+                <div className="sm:w-1/3 font-bold text-2xl flex sm:items-end justify-center sm:justify-end">
                     <button
                         type="button"
                         onClick={onAction}
-                        className="bg-primary text-white px-3 py-2 text-xs hover:bg-primary-dark transition"
-                        aria-label={`View more about ${name}`}
+                        className="text-primary border-3 hover:bg-primary hover:text-white cursor-pointer px-2 py-2 text-xs hover:bg-primary-dark transition"
                     >
                         View More
                     </button>

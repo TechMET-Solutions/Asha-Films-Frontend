@@ -113,6 +113,9 @@ function ProjectDetails() {
               <div>
                 <span className="font-semibold">Platform:</span> {platform}
               </div>
+              <div>
+                <span className="font-semibold">Casting Directors:</span> Gaurav Shah
+              </div>
             </div>
 
             <div className="mt-8">

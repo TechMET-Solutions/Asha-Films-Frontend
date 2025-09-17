@@ -122,6 +122,15 @@ export default function App() {
           }
         />
 
+        <Route
+          path="/user/view-job-details/:id"
+          element={
+            <UserLayout>
+              <ViewJobDetails />
+            </UserLayout>
+          }
+        />
+
         {/* ========================= Production Routes =============================================  */}
 
         <Route

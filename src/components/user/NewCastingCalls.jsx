@@ -117,7 +117,7 @@ function NewCastingCalls() {
                     : "N/A"
                 }
                 closingText={getClosingText(job.application_deadline)}
-                viewMoreLink={`/production/view-job-details/${job.id}`}
+                viewMoreLink={`/user/view-job-details/${job.id}`}
                 onApply={() => handleApplicants(job.id)}
                 type='user'
               />

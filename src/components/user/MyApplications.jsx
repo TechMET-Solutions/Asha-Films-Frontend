@@ -87,7 +87,7 @@ function MyApplication() {
                     : "N/A"
                 }
                 closingText={getClosingText(job.application_deadline)}
-                viewMoreLink={`/production/view-job-details/${job.id}`}
+                viewMoreLink={`/user/view-job-details/${job.id}`}
                 applied={true}
               />
             );

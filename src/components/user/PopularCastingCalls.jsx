@@ -96,7 +96,7 @@ function PopularCastingCalls() {
                     : "N/A"
                 }
                 closingText={getClosingText(job.application_deadline)}
-                viewMoreLink={`/production/view-job-details/${job.id}`}
+                viewMoreLink={`/user/view-job-details/${job.id}`}
                 // onApply={`/user/castingapplicaton/${job.id}`}
                 // applied={true}
                 showActions={false} // ✅ hide Apply/View, only card content

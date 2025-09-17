@@ -23,7 +23,7 @@ export default function Contact() {
           <ContactCard
             icon={FaMapMarkerAlt}
             title="Office Address"
-            description="Lorem Ipsum is simply dummy text of the printing and typesetting industry doing that"
+            description="ASHA FILMS Office No 105, 1st Floor, Makskap Center, Off Veera Desai Rd, opp. Dilkap Chambers, near Yash Raj Studio, Veera Desai Industrial Estate, Andheri West, Mumbai, Maharashtra 400053"
           />
           <ContactCard
             icon={FaEnvelope}

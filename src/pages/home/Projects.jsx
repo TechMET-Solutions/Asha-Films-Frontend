@@ -59,7 +59,7 @@ function Projects() {
           {/* Filter by type */}
           <CategorySelector
             label="Sort By "
-            options={["All", "Movies", "Web Series", "Advertisement"]}
+            options={["All", "Movies", "Web Series", "Advertisement","Print Shoot"]}
             selected={selectedType}
             onChange={setSelectedType}
           />
@@ -88,7 +88,7 @@ function Projects() {
                 <div>
                   <h3 className="text-sm font-medium text-gray-800 mb-1">
                     {project.type} -{" "}
-                    <span className="text-primary">{project.film_title}</span>
+                    <span className="text-primary uppercase font-semibold">{project.film_title}</span>
                   </h3>
                   <p className="text-xs text-gray-600 mb-4 line-clamp-3">
                     {project.about_project || "No description available."}
