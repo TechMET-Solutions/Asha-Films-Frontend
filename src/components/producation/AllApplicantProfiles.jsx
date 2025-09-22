@@ -51,7 +51,9 @@ const AllApplicantProfiles = () => {
       </h2>
 
       {applicants.length === 0 ? (
-        <p>No applicants found.</p>
+        <p>No applicants found. 
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Explicabo quidem unde dolore nisi distinctio dolor culpa laboriosam voluptates labore odit reiciendis excepturi minus corrupti, vel, quis, facere consectetur porro temporibus!
+        </p>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
           {applicants.map((app) => (
@@ -65,6 +67,7 @@ const AllApplicantProfiles = () => {
               onAction={() =>
                 navigate(`/production/application-details/${app.id}`)
               }
+              
             />
           ))}
         </div>

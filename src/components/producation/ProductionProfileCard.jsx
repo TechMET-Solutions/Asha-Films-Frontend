@@ -115,7 +115,7 @@ export default function ProductionProfileCard() {
         {user?.company_name || "User"}
       </h2>
       <p className="text-xs sm:text-sm text-[#333] mb-1">
-        Type of Work: {user?.type_of_work || "N/A"}
+        Type of Work: {user?.type || "N/A"}
       </p>
       <p className="text-xs text-[#aaa] mb-4">Last Updated: {formattedDate}</p>
 

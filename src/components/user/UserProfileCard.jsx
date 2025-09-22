@@ -9,6 +9,8 @@ export default function UserProfileCard() {
   const [user, setUser] = useState(null);
   const [profileProgress, setProfileProgress] = useState(0);
 
+   console.log(user,"user")
+
   // ✅ Load user from local storage
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -118,7 +120,7 @@ export default function UserProfileCard() {
         {user?.name || "User"}
       </h2>
       <p className="text-sm text-[#333] mb-1">
-        Profile Type: {user?.profileType || "N/A"}
+        Profile Type: {user?.type || "N/A"}
       </p>
       <p className="text-xs text-[#aaa] mb-4">Last Updated: {formattedDate}</p>
 

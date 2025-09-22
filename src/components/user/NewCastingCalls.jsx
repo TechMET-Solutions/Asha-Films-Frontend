@@ -56,20 +56,6 @@ function NewCastingCalls() {
     return `Closes in ${diffDays} Day${diffDays > 1 ? "s" : ""}`;
   };
 
-  // const handleApplicants = (jobId, jobType) => {
-  //   try {
-  //     const user = JSON.parse(localStorage.getItem("user"));
-  //     if (!user || !user.id) {
-  //       console.error("❌ User not found in localStorage");
-  //       return;
-  //     }
-
-  //     navigate(`/user/castingapplicaton/${user.id}`)
-
-  //   } catch (error) {
-  //     console.error("❌ Error parsing user from localStorage:", error);
-  //   }
-  // };
 
   const handleApplicants = (jobId) => {
     debugger

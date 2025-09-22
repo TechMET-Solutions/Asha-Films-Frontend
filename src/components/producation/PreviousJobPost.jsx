@@ -32,6 +32,10 @@ function PreviousJobPost() {
     fetchJobs();
   }, []);
 
+  const handleApplicants = (id) => {
+    navigate(`/production/applicant-profile/${id}`);
+  };
+
   // ✅ Calculate "Closes in X Days"
   const getClosingText = (deadline) => {
     if (!deadline) return null;
@@ -65,14 +69,15 @@ function PreviousJobPost() {
             date={
               job.application_deadline
                 ? new Date(job.application_deadline).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                  })
+                  day: "2-digit",
+                  month: "short",
+                })
                 : "N/A"
             }
             closingText={getClosingText(job.application_deadline)}
             viewMoreLink={`/production/view-job-details/${job.id}`}
-            onApply={`/production/applicant-profile/${job.id}`}
+            onApply={() => handleApplicants(job.id)}
+          // onApply={`/production/applicant-profile/${job.id}`}
           />
         ))}
       </div>

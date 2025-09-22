@@ -1,11 +1,11 @@
-// src/components/ViewJobDetails.jsx
+// src/components/UserViewJobDetails.jsx
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { FaArrowLeft, FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 import { API } from "../../api";
 
-const ViewJobDetails = () => {
+const UserViewJobDetails = () => {
     const navigate = useNavigate();
     const { id } = useParams(); // job id from URL
 
@@ -31,18 +31,35 @@ const ViewJobDetails = () => {
 
         fetchJob();
     }, [id]);
-
-    const handleApplicants = (id) => {
-        navigate(`/production/applicant-profile/${id}`);
-    };
-
-    const calculateDaysLeft = (deadline) => {
-        if (!deadline) return "N/A";
+    const getClosingText = (deadline) => {
+        if (!deadline) return null;
         const today = new Date();
-        const end = new Date(deadline);
-        const diff = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
-        return diff > 0 ? diff : 0;
+        const endDate = new Date(deadline);
+        const diffTime = endDate - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays < 0) return "Closed";
+        if (diffDays === 0) return "Closes today";
+        return `Closes in ${diffDays} Day${diffDays > 1 ? "s" : ""}`;
     };
+
+
+    const handleApplicants = (jobId) => {
+        debugger
+        try {
+            const user = JSON.parse(localStorage.getItem("user"));
+            if (!user || !user.id) {
+                console.error("❌ User not found in localStorage");
+                return;
+            }
+
+            // navigate with both userId and jobId (so it knows what job they applied to)
+            navigate(`/user/castingapplicaton/${user.id}/${jobId}`);
+        } catch (error) {
+            console.error("❌ Error parsing user from localStorage:", error);
+        }
+    };
+
 
     if (loading) {
         return <p className="text-center mt-10">Loading job details...</p>;
@@ -85,11 +102,13 @@ const ViewJobDetails = () => {
 
                 {/* Right Side Box */}
                 <div className="p-4 space-y-4 flex flex-col items-end">
-                    <p className="w-[160px] bg-white text-primary border-2 border-primary py-2 text-center">{calculateDaysLeft(job.audition_dates)} Days to Expire</p>
+                    <p className="w-[160px] bg-white text-primary border-2 border-primary py-2 text-center">
+                        {getClosingText(job.application_deadline)}
+                    </p>
                     <button
                         onClick={() => handleApplicants(job.id)}
                         className="w-[160px] bg-white text-primary border-2 border-primary py-2">
-                        Applicants
+                        Apply
                     </button>
                 </div>
             </div>
@@ -131,4 +150,4 @@ const ViewJobDetails = () => {
     );
 };
 
-export default ViewJobDetails;
+export default UserViewJobDetails;

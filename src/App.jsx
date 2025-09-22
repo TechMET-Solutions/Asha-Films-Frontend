@@ -8,6 +8,7 @@ import { HomeLayout, ProductionLayout, UserLayout } from './layouts'
 import { AboutUs, CastingCalls, Contact, Home, OurClients, Plans, ProductionForgotPassword, ProductionLogin, ProductionRegister, ProductionResetPassword, ProductionVerification, Profiles, ProjectDetails, Projects, Services, UserForgotPassword, UserLogin, UserRegister, UserResetPassword, UserVerification } from './pages'
 import UserProfile from './pages/users/UserProfile'
 import ProtectedRoute from './routes/ProtectedRoute'
+import UserViewJobDetails from './components/user/UserViewJobDetails'
 
 
 export default function App() {
@@ -125,9 +126,11 @@ export default function App() {
         <Route
           path="/user/view-job-details/:id"
           element={
-            <UserLayout>
-              <ViewJobDetails />
-            </UserLayout>
+            <ProtectedRoute role={["user"]}>
+              <UserLayout>
+                <UserViewJobDetails />
+              </UserLayout>
+            </ProtectedRoute>
           }
         />
 

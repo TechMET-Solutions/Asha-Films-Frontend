@@ -11,6 +11,10 @@ function UpcomingProjects() {
 
   const navigate = useNavigate();
 
+  const handleApplicants = (id) => {
+    navigate(`/production/applicant-profile/${id}`);
+  };
+
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -59,7 +63,7 @@ function UpcomingProjects() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
         {jobs.map((job) => (
           <CastingCard
-          key={job.id}
+            key={job.id}
             title={job.project_type}
             description={
               job.project_description
@@ -68,16 +72,16 @@ function UpcomingProjects() {
             }
             location={job.city_location || "Unknown"}
             date={job.application_deadline ? new Date(job.application_deadline).toLocaleDateString(
-                "en-GB",
-                {
-                  day: "2-digit",
-                  month: "short",
-                }
-              )
+              "en-GB",
+              {
+                day: "2-digit",
+                month: "short",
+              }
+            )
               : "N/A"}
             closingText={calculateDaysLeft(job.application_deadline)}
             viewMoreLink={`/production/view-job-details/${job.id}`}
-            onApply={`/production/applicant-profile/${job.id}`}
+            onApply={() => handleApplicants(job.id)}
           />
         ))}
       </div>
